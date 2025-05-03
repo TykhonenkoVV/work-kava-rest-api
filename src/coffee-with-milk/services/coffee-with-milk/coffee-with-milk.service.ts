@@ -55,45 +55,45 @@ export class CoffeeWithMilkService {
 
   async updateCoffeeWithMilk(
     id: string,
-    owner: string,
     updateCoffeeWithMilkDto: UpdateCoffeeWithMilkDto,
   ) {
-    const result = await this.coffeeWithMilkModel.find({
-      owner,
-      title: updateCoffeeWithMilkDto.title,
+    const result = await this.coffeeWithMilkModel.findOne({
+      _id: id,
     });
-    const isDuplicateTitle = result.filter(
-      (el) => el._id.toString() !== id,
-    ).length;
-    if (isDuplicateTitle) {
-      throw new HttpException('This product name already exists', 409);
+    if (!result) {
+      throw new HttpException('Product id not found', 409);
+    } else {
+      const coffeeWithMilk = await this.coffeeWithMilkModel
+        .findByIdAndUpdate(id, updateCoffeeWithMilkDto, {
+          new: true,
+          select: '-owner -createdAt -updatedAt',
+        })
+        .exec();
+
+      return {
+        status: 'create',
+        code: 201,
+        message: 'Product updated successfully',
+        coffee_with_milk: coffeeWithMilk,
+      };
     }
-
-    const coffeeWithMilk = await this.coffeeWithMilkModel
-      .findByIdAndUpdate(id, updateCoffeeWithMilkDto, {
-        new: true,
-        select: '-owner -createdAt -updatedAt',
-      })
-      .exec();
-
-    return {
-      status: 'create',
-      code: 201,
-      message: 'Product updated successfully',
-      coffee_with_milk: coffeeWithMilk,
-    };
   }
 
   async deleteCoffeeWithMilk(id: string) {
-    const deletedCaffeeWithMilk =
-      await this.coffeeWithMilkModel.findByIdAndDelete({
-        _id: id,
-      });
-    return {
-      status: 'success',
-      code: 200,
-      message: 'Product deleted',
-      deleted: deletedCaffeeWithMilk,
-    };
+    const result = await this.coffeeWithMilkModel.findOne({ _id: id });
+    if (!result) {
+      throw new HttpException('Product id not found', 409);
+    } else {
+      const deletedCaffeeWithMilk =
+        await this.coffeeWithMilkModel.findByIdAndDelete({
+          _id: id,
+        });
+      return {
+        status: 'success',
+        code: 200,
+        message: 'Product deleted',
+        deleted: deletedCaffeeWithMilk,
+      };
+    }
   }
 }

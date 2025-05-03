@@ -46,12 +46,9 @@ export class CoffeeWithMilkController {
   updateCoffeeWithMilk(
     @Param('id') id: string,
     @Body() updateCoffeeWithMilkDto: UpdateCoffeeWithMilkDto,
-    @Req() req: Request,
   ) {
-    const owner = req.user['sub'];
     return this.coffeeWithMilkServices.updateCoffeeWithMilk(
       id,
-      owner,
       updateCoffeeWithMilkDto,
     );
   }

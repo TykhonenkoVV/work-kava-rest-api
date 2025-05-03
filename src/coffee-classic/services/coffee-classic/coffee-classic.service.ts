@@ -55,45 +55,45 @@ export class CoffeeClassicService {
 
   async updateCoffeeClassic(
     id: string,
-    owner: string,
     updateCoffeeClassicDto: UpdateCoffeeClassicDto,
   ) {
-    const result = await this.coffeeClassicModel.find({
-      owner,
-      title: updateCoffeeClassicDto.title,
+    const result = await this.coffeeClassicModel.findOne({
+      _id: id,
     });
-    const isDuplicateTitle = result.filter(
-      (el) => el._id.toString() !== id,
-    ).length;
-    if (isDuplicateTitle) {
-      throw new HttpException('This product name already exists', 409);
+    if (!result) {
+      throw new HttpException('Product id not found', 409);
+    } else {
+      const coffeeClassic = await this.coffeeClassicModel
+        .findByIdAndUpdate(id, updateCoffeeClassicDto, {
+          new: true,
+          select: '-owner -createdAt -updatedAt',
+        })
+        .exec();
+
+      return {
+        status: 'create',
+        code: 201,
+        message: 'Product updated successfully',
+        coffee_classic: coffeeClassic,
+      };
     }
-
-    const coffeeClassic = await this.coffeeClassicModel
-      .findByIdAndUpdate(id, updateCoffeeClassicDto, {
-        new: true,
-        select: '-owner -createdAt -updatedAt',
-      })
-      .exec();
-
-    return {
-      status: 'create',
-      code: 201,
-      message: 'Product updated successfully',
-      coffee_classic: coffeeClassic,
-    };
   }
 
   async deleteCoffeeClassic(id: string) {
-    const deletedCaffeeClassic =
-      await this.coffeeClassicModel.findByIdAndDelete({
-        _id: id,
-      });
-    return {
-      status: 'success',
-      code: 200,
-      message: 'Product deleted',
-      deleted: deletedCaffeeClassic,
-    };
+    const result = await this.coffeeClassicModel.findOne({ _id: id });
+    if (!result) {
+      throw new HttpException('Product id not found', 409);
+    } else {
+      const deletedCaffeeClassic =
+        await this.coffeeClassicModel.findByIdAndDelete({
+          _id: id,
+        });
+      return {
+        status: 'success',
+        code: 200,
+        message: 'Product deleted',
+        deleted: deletedCaffeeClassic,
+      };
+    }
   }
 }

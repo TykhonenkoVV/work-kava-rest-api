@@ -46,46 +46,43 @@ export class HotDogsService {
     };
   }
 
-  async updateHotDogs(
-    id: string,
-    owner: string,
-    updateHotDogsDto: UpdateHotDogsDto,
-  ) {
-    const result = await this.hoDogsModel.find({
-      owner,
-      title: updateHotDogsDto.title,
+  async updateHotDogs(id: string, updateHotDogsDto: UpdateHotDogsDto) {
+    const result = await this.hoDogsModel.findOne({
+      _id: id,
     });
-    const isDuplicateTitle = result.filter(
-      (el) => el._id.toString() !== id,
-    ).length;
-    if (isDuplicateTitle) {
-      throw new HttpException('This product name already exists', 409);
+    if (!result) {
+      throw new HttpException('Product id not found', 409);
+    } else {
+      const hotDogs = await this.hoDogsModel
+        .findByIdAndUpdate(id, updateHotDogsDto, {
+          new: true,
+          select: '-owner -createdAt -updatedAt',
+        })
+        .exec();
+
+      return {
+        status: 'create',
+        code: 201,
+        message: 'Product updated successfully',
+        hot_dogs: hotDogs,
+      };
     }
-
-    const hotDogs = await this.hoDogsModel
-      .findByIdAndUpdate(id, updateHotDogsDto, {
-        new: true,
-        select: '-owner -createdAt -updatedAt',
-      })
-      .exec();
-
-    return {
-      status: 'create',
-      code: 201,
-      message: 'Product updated successfully',
-      hot_dogs: hotDogs,
-    };
   }
 
   async deleteHotdogs(id: string) {
-    const deletedHotDogs = await this.hoDogsModel.findByIdAndDelete({
-      _id: id,
-    });
-    return {
-      status: 'success',
-      code: 200,
-      message: 'Product deleted',
-      deleted: deletedHotDogs,
-    };
+    const result = await this.hoDogsModel.findOne({ _id: id });
+    if (!result) {
+      throw new HttpException('Product id not found', 409);
+    } else {
+      const deletedHotDogs = await this.hoDogsModel.findByIdAndDelete({
+        _id: id,
+      });
+      return {
+        status: 'success',
+        code: 200,
+        message: 'Product deleted',
+        deleted: deletedHotDogs,
+      };
+    }
   }
 }

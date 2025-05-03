@@ -45,12 +45,9 @@ export class CoffeeClassicController {
   updateCoffeeClassic(
     @Param('id') id: string,
     @Body() updateCoffeeClassicDto: UpdateCoffeeClassicDto,
-    @Req() req: Request,
   ) {
-    const owner = req.user['sub'];
     return this.caffeeClassicServices.updateCoffeeClassic(
       id,
-      owner,
       updateCoffeeClassicDto,
     );
   }

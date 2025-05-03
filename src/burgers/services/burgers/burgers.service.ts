@@ -11,16 +11,16 @@ export class BurgersService {
     @InjectModel(Burgers.name) private burgersModel: Model<Burgers>,
   ) {}
 
-  async createBurgers(owner: string, burgersData: CreateBurgersDto) {
+  async createBurgers(owner: string, createBurgersDto: CreateBurgersDto) {
     const isMatch = await this.burgersModel.findOne({
-      title: burgersData.title,
+      title: createBurgersDto.title,
     });
     if (isMatch) {
       throw new HttpException('This product name already exists.', 409);
     }
     const newBurgers = await new this.burgersModel({
       owner,
-      ...burgersData,
+      ...createBurgersDto,
     }).save();
 
     return {
@@ -48,46 +48,43 @@ export class BurgersService {
     };
   }
 
-  async updateBurgers(
-    id: string,
-    owner: string,
-    updateBurgersDto: UpdateBurgersDto,
-  ) {
-    const result = await this.burgersModel.find({
-      owner,
-      title: updateBurgersDto.title,
+  async updateBurgers(id: string, updateBurgersDto: UpdateBurgersDto) {
+    const result = await this.burgersModel.findOne({
+      _id: id,
     });
-    const isDuplicateTitle = result.filter(
-      (el) => el._id.toString() !== id,
-    ).length;
-    if (isDuplicateTitle) {
-      throw new HttpException('This product name already exists', 409);
+    if (!result) {
+      throw new HttpException('Product id not found', 409);
+    } else {
+      const burgers = await this.burgersModel
+        .findByIdAndUpdate(id, updateBurgersDto, {
+          new: true,
+          select: '-owner -createdAt -updatedAt',
+        })
+        .exec();
+
+      return {
+        status: 'create',
+        code: 201,
+        message: 'Product updated successfully',
+        burger: burgers,
+      };
     }
-
-    const burgers = await this.burgersModel
-      .findByIdAndUpdate(id, updateBurgersDto, {
-        new: true,
-        select: '-owner -createdAt -updatedAt',
-      })
-      .exec();
-
-    return {
-      status: 'create',
-      code: 201,
-      message: 'Product updated successfully',
-      burger: burgers,
-    };
   }
 
   async deleteBurger(id: string) {
-    const deletedBurgers = await this.burgersModel.findByIdAndDelete({
-      _id: id,
-    });
-    return {
-      status: 'success',
-      code: 200,
-      message: 'Product deleted',
-      deleted: deletedBurgers,
-    };
+    const result = await this.burgersModel.findOne({ _id: id });
+    if (!result) {
+      throw new HttpException('Product id not found', 409);
+    } else {
+      const deletedBurger = await this.burgersModel.findByIdAndDelete({
+        _id: id,
+      });
+      return {
+        status: 'success',
+        code: 200,
+        message: 'Product deleted',
+        deleted: deletedBurger,
+      };
+    }
   }
 }

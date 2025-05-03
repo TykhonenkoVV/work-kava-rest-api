@@ -42,10 +42,8 @@ export class HotDogsController {
   updateHotDogs(
     @Param('id') id: string,
     @Body() updateHotDogsDto: UpdateHotDogsDto,
-    @Req() req: Request,
   ) {
-    const owner = req.user['sub'];
-    return this.hotDogsServices.updateHotDogs(id, owner, updateHotDogsDto);
+    return this.hotDogsServices.updateHotDogs(id, updateHotDogsDto);
   }
 
   @UseGuards(AccessTokenGuard)

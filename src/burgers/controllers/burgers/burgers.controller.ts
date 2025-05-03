@@ -42,10 +42,8 @@ export class BurgersController {
   updateBurgers(
     @Param('id') id: string,
     @Body() updateBurgersDto: UpdateBurgersDto,
-    @Req() req: Request,
   ) {
-    const owner = req.user['sub'];
-    return this.burgersServices.updateBurgers(id, owner, updateBurgersDto);
+    return this.burgersServices.updateBurgers(id, updateBurgersDto);
   }
 
   @UseGuards(AccessTokenGuard)

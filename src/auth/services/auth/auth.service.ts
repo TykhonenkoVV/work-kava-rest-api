@@ -28,6 +28,7 @@ export class AuthService {
     const newUser = await this.usersService.createUser({
       ...createUserDto,
       password: hash,
+      role: 'ADMIN', //Доробити логіку ролей
     });
 
     const tokens = await this.getTokens(newUser.id, newUser.email);

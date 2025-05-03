@@ -26,7 +26,7 @@ export class User {
   @Prop()
   refreshToken: string;
 
-  @Prop({ enum: ['admin', 'employee', 'user'] })
+  @Prop({ enum: ['ADMIN', 'EMPLOYEE', 'USER'] })
   role: string;
 }
 

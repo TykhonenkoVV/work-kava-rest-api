@@ -23,11 +23,12 @@ export class BurgersController {
   @UseGuards(AccessTokenGuard)
   @Post()
   @UsePipes(new ValidationPipe())
-  createBurgers(@Body() burgersDto: CreateBurgersDto, @Req() req: Request) {
+  createBurgers(
+    @Body() createBurgersDto: CreateBurgersDto,
+    @Req() req: Request,
+  ) {
     const owner = req.user['sub'];
-    console.log(req.user);
-
-    return this.burgersServices.createBurgers(owner, burgersDto);
+    return this.burgersServices.createBurgers(owner, createBurgersDto);
   }
 
   @Get()

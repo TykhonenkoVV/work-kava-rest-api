@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
   Param,
   Patch,
   Post,
@@ -12,9 +13,10 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { Request } from 'express';
+import mongoose from 'mongoose';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
-import { CreateHotDogsDto } from 'src/hot-dogs/dtos/create-hot-dogs.dto';
-import { UpdateHotDogsDto } from 'src/hot-dogs/dtos/update-hot-dogs.dto';
+import { CreateHotDogDto } from 'src/hot-dogs/dtos/create-hot-dog.dto';
+import { UpdateHotDogDto } from 'src/hot-dogs/dtos/update-hot-dog.dto';
 import { HotDogsService } from 'src/hot-dogs/services/hot-dogs/hot-dogs.service';
 
 @Controller('api/hotdogs')
@@ -23,12 +25,9 @@ export class HotDogsController {
   @UseGuards(AccessTokenGuard)
   @Post()
   @UsePipes(new ValidationPipe())
-  createHotDogs(
-    @Body() createHotDogsDto: CreateHotDogsDto,
-    @Req() req: Request,
-  ) {
+  createHotDog(@Body() createHotDogDto: CreateHotDogDto, @Req() req: Request) {
     const owner = req.user['sub'];
-    return this.hotDogsServices.createHotDogs(owner, createHotDogsDto);
+    return this.hotDogsServices.createHotDog(owner, createHotDogDto);
   }
 
   @Get()
@@ -39,17 +38,21 @@ export class HotDogsController {
   @UseGuards(AccessTokenGuard)
   @Patch(':id')
   @UsePipes(new ValidationPipe())
-  updateHotDogs(
+  updateHotDog(
     @Param('id') id: string,
-    @Body() updateHotDogsDto: UpdateHotDogsDto,
+    @Body() updateHotDogDto: UpdateHotDogDto,
   ) {
-    return this.hotDogsServices.updateHotDogs(id, updateHotDogsDto);
+    const isValidId = mongoose.Types.ObjectId.isValid(id);
+    if (!isValidId) throw new HttpException('Invalid id.', 404);
+    return this.hotDogsServices.updateHotDog(id, updateHotDogDto);
   }
 
   @UseGuards(AccessTokenGuard)
   @Delete(':id')
   @UsePipes(new ValidationPipe())
   deleteHotDogs(@Param('id') id: string) {
-    return this.hotDogsServices.deleteHotdogs(id);
+    const isValidId = mongoose.Types.ObjectId.isValid(id);
+    if (!isValidId) throw new HttpException('Invalid id.', 404);
+    return this.hotDogsServices.deleteHotdog(id);
   }
 }

@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
   Param,
   Patch,
   Post,
@@ -12,6 +13,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { Request } from 'express';
+import mongoose from 'mongoose';
 import { CreateCoffeeClassicDto } from 'src/coffee-classic/dtos/create-coffee-classic.dto';
 import { UpdateCoffeeClassicDto } from 'src/coffee-classic/dtos/update-coffee-classic.dto';
 import { CoffeeClassicService } from 'src/coffee-classic/services/coffee-classic/coffee-classic.service';
@@ -46,6 +48,8 @@ export class CoffeeClassicController {
     @Param('id') id: string,
     @Body() updateCoffeeClassicDto: UpdateCoffeeClassicDto,
   ) {
+    const isValidId = mongoose.Types.ObjectId.isValid(id);
+    if (!isValidId) throw new HttpException('Invalid id.', 404);
     return this.caffeeClassicServices.updateCoffeeClassic(
       id,
       updateCoffeeClassicDto,
@@ -55,6 +59,8 @@ export class CoffeeClassicController {
   @UseGuards(AccessTokenGuard)
   @Delete(':id')
   deleteCoffeeClassic(@Param('id') id: string) {
+    const isValidId = mongoose.Types.ObjectId.isValid(id);
+    if (!isValidId) throw new HttpException('Invalid id.', 404);
     return this.caffeeClassicServices.deleteCoffeeClassic(id);
   }
 }

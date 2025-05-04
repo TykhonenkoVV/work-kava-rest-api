@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
   Param,
   Patch,
   Post,
@@ -12,9 +13,10 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { Request } from 'express';
+import mongoose from 'mongoose';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
-import { CreateRollsDto } from 'src/rolls/dtos/create-rolls.dto';
-import { UpdateRollsDto } from 'src/rolls/dtos/update-rolls.dto';
+import { CreateRollDto } from 'src/rolls/dtos/create-roll.dto';
+import { UpdateRollDto } from 'src/rolls/dtos/update-roll.dto';
 import { RollsService } from 'src/rolls/services/rolls/rolls.service';
 
 @Controller('api/rolls')
@@ -24,9 +26,9 @@ export class RollsController {
   @UseGuards(AccessTokenGuard)
   @Post()
   @UsePipes(new ValidationPipe())
-  createRolls(@Body() createRollsDto: CreateRollsDto, @Req() req: Request) {
+  createRolls(@Body() createRollDto: CreateRollDto, @Req() req: Request) {
     const owner = req.user['sub'];
-    return this.rollsServices.createRolls(owner, createRollsDto);
+    return this.rollsServices.createRoll(owner, createRollDto);
   }
 
   @Get()
@@ -37,13 +39,17 @@ export class RollsController {
   @UseGuards(AccessTokenGuard)
   @Patch(':id')
   @UsePipes(new ValidationPipe())
-  updateRolls(@Param('id') id: string, @Body() updateRollsDto: UpdateRollsDto) {
-    return this.rollsServices.updateRolls(id, updateRollsDto);
+  updateRolls(@Param('id') id: string, @Body() updateRollDto: UpdateRollDto) {
+    const isValidId = mongoose.Types.ObjectId.isValid(id);
+    if (!isValidId) throw new HttpException('Invalid id.', 404);
+    return this.rollsServices.updateRoll(id, updateRollDto);
   }
 
   @UseGuards(AccessTokenGuard)
   @Delete(':id')
   deleteRolls(@Param('id') id: string) {
-    return this.rollsServices.deleteRolls(id);
+    const isValidId = mongoose.Types.ObjectId.isValid(id);
+    if (!isValidId) throw new HttpException('Invalid id.', 404);
+    return this.rollsServices.deleteRoll(id);
   }
 }

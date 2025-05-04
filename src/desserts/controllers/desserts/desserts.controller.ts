@@ -14,44 +14,47 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import mongoose from 'mongoose';
-import { CreateBurgerDto } from 'src/burgers/dtos/create-burger.dto';
-import { UpdateBurgerDto } from 'src/burgers/dtos/update-burger.dto';
-import { BurgersService } from 'src/burgers/services/burgers/burgers.service';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
+import { CreateDessertDto } from 'src/desserts/dtos/create-dessert.dto';
+import { UpdateDessertDto } from 'src/desserts/dtos/update-dessert.dto';
+import { DessertsService } from 'src/desserts/services/desserts/desserts.service';
 
-@Controller('api/burgers')
-export class BurgersController {
-  constructor(private burgersServices: BurgersService) {}
+@Controller('api/desserts')
+export class DessertsController {
+  constructor(private dessertsServices: DessertsService) {}
   @UseGuards(AccessTokenGuard)
   @Post()
   @UsePipes(new ValidationPipe())
-  createBurger(@Body() createBurgerDto: CreateBurgerDto, @Req() req: Request) {
+  createDessert(
+    @Body() createDessertDto: CreateDessertDto,
+    @Req() req: Request,
+  ) {
     const owner = req.user['sub'];
-    return this.burgersServices.createBurger(owner, createBurgerDto);
+    return this.dessertsServices.createDessert(owner, createDessertDto);
   }
 
   @Get()
-  getBurgers() {
-    return this.burgersServices.getBurgers();
+  getDesserts() {
+    return this.dessertsServices.getDesserts();
   }
 
   @UseGuards(AccessTokenGuard)
   @Patch(':id')
   @UsePipes(new ValidationPipe())
-  updateBurger(
+  updateDessert(
     @Param('id') id: string,
-    @Body() updateBurgerDto: UpdateBurgerDto,
+    @Body() updateDessertDto: UpdateDessertDto,
   ) {
     const isValidId = mongoose.Types.ObjectId.isValid(id);
     if (!isValidId) throw new HttpException('Invalid id.', 404);
-    return this.burgersServices.updateBurgers(id, updateBurgerDto);
+    return this.dessertsServices.updateDessert(id, updateDessertDto);
   }
 
   @UseGuards(AccessTokenGuard)
   @Delete(':id')
-  deleteBurgers(@Param('id') id: string) {
+  deleteDessert(@Param() id: string) {
     const isValidId = mongoose.Types.ObjectId.isValid(id);
     if (!isValidId) throw new HttpException('Invalid id.', 404);
-    return this.burgersServices.deleteBurger(id);
+    return this.dessertsServices.deleteDessert(id);
   }
 }

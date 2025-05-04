@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
   Param,
   Patch,
   Post,
@@ -12,6 +13,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { Request } from 'express';
+import mongoose from 'mongoose';
 import { CreateCoffeeWithMilkDto } from 'src/coffee-with-milk/dtos/create-coffe-with-milk.dto';
 import { UpdateCoffeeWithMilkDto } from 'src/coffee-with-milk/dtos/update-coffe-with-milk.dto';
 import { CoffeeWithMilkService } from 'src/coffee-with-milk/services/coffee-with-milk/coffee-with-milk.service';
@@ -47,6 +49,8 @@ export class CoffeeWithMilkController {
     @Param('id') id: string,
     @Body() updateCoffeeWithMilkDto: UpdateCoffeeWithMilkDto,
   ) {
+    const isValidId = mongoose.Types.ObjectId.isValid(id);
+    if (!isValidId) throw new HttpException('Invalid id.', 404);
     return this.coffeeWithMilkServices.updateCoffeeWithMilk(
       id,
       updateCoffeeWithMilkDto,
@@ -56,6 +60,8 @@ export class CoffeeWithMilkController {
   @UseGuards(AccessTokenGuard)
   @Delete(':id')
   deleteCoffeeWithMilk(@Param('id') id: string) {
+    const isValidId = mongoose.Types.ObjectId.isValid(id);
+    if (!isValidId) throw new HttpException('Invalid id.', 404);
     return this.coffeeWithMilkServices.deleteCoffeeWithMilk(id);
   }
 }

@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { User } from 'src/users/schemas/users/User.schema';
 
 @Schema({ versionKey: false, timestamps: true })
-export class Burgers {
+export class Dessert {
   @Prop({ required: true })
   title: string;
 
@@ -11,10 +11,10 @@ export class Burgers {
   index: number;
 
   @Prop({ required: true })
-  price_standart: number[];
+  price: number[];
 
   @Prop({ required: true })
-  price_double: number[];
+  weight: number;
 
   @Prop({ required: true })
   image: string;
@@ -23,4 +23,4 @@ export class Burgers {
   owner: User;
 }
 
-export const BurgersSchema = SchemaFactory.createForClass(Burgers);
+export const DessertSchema = SchemaFactory.createForClass(Dessert);

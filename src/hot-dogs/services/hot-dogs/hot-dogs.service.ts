@@ -1,43 +1,43 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateHotDogsDto } from 'src/hot-dogs/dtos/create-hot-dogs.dto';
-import { UpdateHotDogsDto } from 'src/hot-dogs/dtos/update-hot-dogs.dto';
-import { HotDogs } from 'src/hot-dogs/schemas/hot-dogs.schema';
+import { CreateHotDogDto } from 'src/hot-dogs/dtos/create-hot-dog.dto';
+import { UpdateHotDogDto } from 'src/hot-dogs/dtos/update-hot-dog.dto';
+import { HotDog } from 'src/hot-dogs/schemas/hot-dog.schema';
 
 @Injectable()
 export class HotDogsService {
-  constructor(@InjectModel(HotDogs.name) private hoDogsModel: Model<HotDogs>) {}
+  constructor(@InjectModel(HotDog.name) private hoDogModel: Model<HotDog>) {}
 
-  async createHotDogs(owner: string, hotDogsData: CreateHotDogsDto) {
-    const isMatch = await this.hoDogsModel.findOne({
-      title: hotDogsData.title,
+  async createHotDog(owner: string, createHotDogDto: CreateHotDogDto) {
+    const isMatch = await this.hoDogModel.findOne({
+      title: createHotDogDto.title,
     });
     if (isMatch) {
       throw new HttpException('This product name already exists.', 409);
     }
-    const newHotDogs = await new this.hoDogsModel({
+    const newHotDog = await new this.hoDogModel({
       owner,
-      ...hotDogsData,
+      ...createHotDogDto,
     }).save();
 
     return {
       status: 'created',
       code: 201,
       message: 'Product created successfully',
-      hot_dogs: {
-        _id: newHotDogs._id,
-        index: newHotDogs.index,
-        price_standart: newHotDogs.price_standart,
-        price_double: newHotDogs.price_double,
-        title: newHotDogs.title,
-        image: newHotDogs.image,
+      hot_dog: {
+        _id: newHotDog._id,
+        index: newHotDog.index,
+        price_standart: newHotDog.price_standart,
+        price_double: newHotDog.price_double,
+        title: newHotDog.title,
+        image: newHotDog.image,
       },
     };
   }
 
   async getHotDogs() {
-    const hotDogsArr = await this.hoDogsModel.find();
+    const hotDogsArr = await this.hoDogModel.find();
     return {
       status: 'success',
       code: 200,
@@ -46,43 +46,41 @@ export class HotDogsService {
     };
   }
 
-  async updateHotDogs(id: string, updateHotDogsDto: UpdateHotDogsDto) {
-    const result = await this.hoDogsModel.findOne({
-      _id: id,
-    });
-    if (!result) {
-      throw new HttpException('Product id not found', 409);
-    } else {
-      const hotDogs = await this.hoDogsModel
-        .findByIdAndUpdate(id, updateHotDogsDto, {
-          new: true,
-          select: '-owner -createdAt -updatedAt',
-        })
-        .exec();
-
-      return {
-        status: 'create',
-        code: 201,
-        message: 'Product updated successfully',
-        hot_dogs: hotDogs,
-      };
-    }
+  async getHotDogById(id: string) {
+    const result = await this.hoDogModel.findById(id).exec();
+    if (result === null) return false;
+    else return result;
   }
 
-  async deleteHotdogs(id: string) {
-    const result = await this.hoDogsModel.findOne({ _id: id });
-    if (!result) {
-      throw new HttpException('Product id not found', 409);
-    } else {
-      const deletedHotDogs = await this.hoDogsModel.findByIdAndDelete({
-        _id: id,
-      });
-      return {
-        status: 'success',
-        code: 200,
-        message: 'Product deleted',
-        deleted: deletedHotDogs,
-      };
-    }
+  async updateHotDog(id: string, updateHotDogDto: UpdateHotDogDto) {
+    const isFinded = await this.getHotDogById(id);
+    if (!isFinded) throw new HttpException('Product not found.', 404);
+    const updatedHotDog = await this.hoDogModel
+      .findByIdAndUpdate(id, updateHotDogDto, {
+        new: true,
+        select: '-owner -createdAt -updatedAt',
+      })
+      .exec();
+
+    return {
+      status: 'create',
+      code: 201,
+      message: 'Product updated successfully',
+      updated: updatedHotDog,
+    };
+  }
+
+  async deleteHotdog(id: string) {
+    const isFinded = await this.getHotDogById(id);
+    if (!isFinded) throw new HttpException('Product not found.', 404);
+    const deletedHotDog = await this.hoDogModel.findByIdAndDelete({
+      _id: id,
+    });
+    return {
+      status: 'success',
+      code: 200,
+      message: 'Product deleted',
+      deleted: deletedHotDog,
+    };
   }
 }

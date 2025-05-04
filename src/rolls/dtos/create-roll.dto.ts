@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-export class CreateHotDogsDto {
+export class CreateRollDto {
   @IsNotEmpty()
   @IsString()
   title: string;
@@ -18,7 +18,7 @@ export class CreateHotDogsDto {
   @IsNotEmpty()
   @Type(() => Number)
   @IsArray()
-  price_double: number[];
+  price_xl: number[];
 
   @IsNotEmpty()
   @IsString()

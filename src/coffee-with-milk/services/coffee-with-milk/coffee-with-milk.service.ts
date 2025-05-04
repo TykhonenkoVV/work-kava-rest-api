@@ -14,24 +14,24 @@ export class CoffeeWithMilkService {
 
   async createCoffeeWithMilk(
     owner: string,
-    coffeeWithMilkData: CreateCoffeeWithMilkDto,
+    createCoffeeWithMilkDto: CreateCoffeeWithMilkDto,
   ) {
     const isMatch = await this.coffeeWithMilkModel.findOne({
-      title: coffeeWithMilkData.title,
+      title: createCoffeeWithMilkDto.title,
     });
     if (isMatch) {
       throw new HttpException('This product name already exists.', 409);
     }
     const newCoffeeWithMilk = await new this.coffeeWithMilkModel({
       owner,
-      ...coffeeWithMilkData,
+      ...createCoffeeWithMilkDto,
     }).save();
 
     return {
       status: 'created',
       code: 201,
       message: 'Product created successfully',
-      board: {
+      offee_with_milk: {
         _id: newCoffeeWithMilk._id,
         index: newCoffeeWithMilk.index,
         price: newCoffeeWithMilk.price,
@@ -53,47 +53,45 @@ export class CoffeeWithMilkService {
     };
   }
 
+  async getCoffeeWithMilkById(id: string) {
+    const result = await this.coffeeWithMilkModel.findById(id).exec();
+    if (result === null) return false;
+    else return result;
+  }
+
   async updateCoffeeWithMilk(
     id: string,
     updateCoffeeWithMilkDto: UpdateCoffeeWithMilkDto,
   ) {
-    const result = await this.coffeeWithMilkModel.findOne({
-      _id: id,
-    });
-    if (!result) {
-      throw new HttpException('Product id not found', 409);
-    } else {
-      const coffeeWithMilk = await this.coffeeWithMilkModel
-        .findByIdAndUpdate(id, updateCoffeeWithMilkDto, {
-          new: true,
-          select: '-owner -createdAt -updatedAt',
-        })
-        .exec();
+    const isFinded = await this.getCoffeeWithMilkById(id);
+    if (!isFinded) throw new HttpException('Product not found.', 404);
+    const updatedCoffeeWithMilk = await this.coffeeWithMilkModel
+      .findByIdAndUpdate(id, updateCoffeeWithMilkDto, {
+        new: true,
+        select: '-owner -createdAt -updatedAt',
+      })
+      .exec();
 
-      return {
-        status: 'create',
-        code: 201,
-        message: 'Product updated successfully',
-        coffee_with_milk: coffeeWithMilk,
-      };
-    }
+    return {
+      status: 'create',
+      code: 201,
+      message: 'Product updated successfully',
+      updated: updatedCoffeeWithMilk,
+    };
   }
 
   async deleteCoffeeWithMilk(id: string) {
-    const result = await this.coffeeWithMilkModel.findOne({ _id: id });
-    if (!result) {
-      throw new HttpException('Product id not found', 409);
-    } else {
-      const deletedCaffeeWithMilk =
-        await this.coffeeWithMilkModel.findByIdAndDelete({
-          _id: id,
-        });
-      return {
-        status: 'success',
-        code: 200,
-        message: 'Product deleted',
-        deleted: deletedCaffeeWithMilk,
-      };
-    }
+    const isFinded = await this.getCoffeeWithMilkById(id);
+    if (!isFinded) throw new HttpException('Product not found.', 404);
+    const deletedCaffeeWithMilk =
+      await this.coffeeWithMilkModel.findByIdAndDelete({
+        _id: id,
+      });
+    return {
+      status: 'success',
+      code: 200,
+      message: 'Product deleted',
+      deleted: deletedCaffeeWithMilk,
+    };
   }
 }

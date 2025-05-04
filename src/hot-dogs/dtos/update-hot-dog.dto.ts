@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-export class CreateBurgersDto {
+export class UpdateHotDogDto {
   @IsNotEmpty()
   @IsString()
   title: string;

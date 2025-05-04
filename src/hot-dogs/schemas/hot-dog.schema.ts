@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { User } from 'src/users/schemas/users/User.schema';
 
 @Schema({ versionKey: false, timestamps: true })
-export class Rolls {
+export class HotDog {
   @Prop({ required: true })
   title: string;
 
@@ -14,7 +14,7 @@ export class Rolls {
   price_standart: number[];
 
   @Prop({ required: true })
-  price_xl: number[];
+  price_double: number[];
 
   @Prop({ required: true })
   image: string;
@@ -23,4 +23,4 @@ export class Rolls {
   owner: User;
 }
 
-export const RollsSchema = SchemaFactory.createForClass(Rolls);
+export const HotDogSchema = SchemaFactory.createForClass(HotDog);

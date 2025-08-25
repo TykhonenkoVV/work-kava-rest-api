@@ -17,7 +17,7 @@ export class CoffeeWithMilkService {
     createCoffeeWithMilkDto: CreateCoffeeWithMilkDto,
   ) {
     const isMatch = await this.coffeeWithMilkModel.findOne({
-      title: createCoffeeWithMilkDto.title,
+      title_en: createCoffeeWithMilkDto.title_en,
     });
     if (isMatch) {
       throw new HttpException('This product name already exists.', 409);
@@ -34,12 +34,15 @@ export class CoffeeWithMilkService {
       offee_with_milk: {
         _id: newCoffeeWithMilk._id,
         index: newCoffeeWithMilk.index,
-        price: newCoffeeWithMilk.price,
-        title: newCoffeeWithMilk.title,
+        title_en: newCoffeeWithMilk.title_en,
+        title_de: newCoffeeWithMilk.title_de,
+        title_ua: newCoffeeWithMilk.title_ua,
+        price_en: newCoffeeWithMilk.price_en,
+        price_de: newCoffeeWithMilk.price_de,
+        price_ua: newCoffeeWithMilk.price_ua,
         coffee: newCoffeeWithMilk.coffee,
         water: newCoffeeWithMilk.water,
         milk: newCoffeeWithMilk.milk,
-        image: newCoffeeWithMilk.image,
       },
     };
   }

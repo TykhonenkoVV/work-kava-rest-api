@@ -17,7 +17,7 @@ export class CoffeeClassicService {
     createCoffeeClassicDto: CreateCoffeeClassicDto,
   ) {
     const isMatch = await this.coffeeClassicModel.findOne({
-      title: createCoffeeClassicDto.title,
+      title_en: createCoffeeClassicDto.title_en,
     });
     if (isMatch) {
       throw new HttpException('This product name already exists.', 409);
@@ -34,11 +34,14 @@ export class CoffeeClassicService {
       coffee_classic: {
         _id: newCoffeeClassic._id,
         index: newCoffeeClassic.index,
-        price: newCoffeeClassic.price,
-        title: newCoffeeClassic.title,
+        price_en: newCoffeeClassic.price_en,
+        price_de: newCoffeeClassic.price_de,
+        price_ua: newCoffeeClassic.price_ua,
+        title_en: newCoffeeClassic.title_en,
+        title_de: newCoffeeClassic.title_de,
+        title_ua: newCoffeeClassic.title_ua,
         coffee: newCoffeeClassic.coffee,
         water: newCoffeeClassic.water,
-        image: newCoffeeClassic.image,
       },
     };
   }

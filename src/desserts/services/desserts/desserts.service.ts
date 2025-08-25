@@ -13,7 +13,7 @@ export class DessertsService {
 
   async createDessert(owner: string, createDessertDto: CreateDessertDto) {
     const isMatch = await this.dessertModel.findOne({
-      title: createDessertDto.title,
+      title_en: createDessertDto.title_en,
     });
     if (isMatch) {
       throw new HttpException('This product name already exists.', 409);
@@ -30,10 +30,13 @@ export class DessertsService {
       dessert: {
         _id: newDesserts._id,
         index: newDesserts.index,
-        price: newDesserts.price,
-        title: newDesserts.title,
+        title_en: newDesserts.title_en,
+        title_de: newDesserts.title_de,
+        title_ua: newDesserts.title_ua,
+        price_en: newDesserts.price_en,
+        price_de: newDesserts.price_de,
+        price_ua: newDesserts.price_ua,
         weight: newDesserts.weight,
-        image: newDesserts.image,
       },
     };
   }

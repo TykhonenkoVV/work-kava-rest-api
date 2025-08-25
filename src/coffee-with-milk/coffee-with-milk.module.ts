@@ -6,6 +6,8 @@ import {
   CoffeeWithMilk,
   CoffeeWithMilkSchema,
 } from './schemas/coffee-with-milk.schema';
+import { MulterModule } from '@nestjs/platform-express';
+import { CloudinaryService } from 'src/cloudinary/services/cloudinary/cloudinary.service';
 
 @Module({
   imports: [
@@ -15,8 +17,11 @@ import {
         schema: CoffeeWithMilkSchema,
       },
     ]),
+    MulterModule.register({
+      dest: './uploads',
+    }),
   ],
   controllers: [CoffeeWithMilkController],
-  providers: [CoffeeWithMilkService],
+  providers: [CoffeeWithMilkService, CloudinaryService],
 })
 export class CoffeeWithMilkModule {}

@@ -1,26 +1,71 @@
-import { Type } from 'class-transformer';
-import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateHotDogDto {
   @IsNotEmpty()
   @IsString()
-  title: string;
+  title_en: string;
+
+  @IsNotEmpty()
+  @IsString()
+  title_de: string;
+
+  @IsNotEmpty()
+  @IsString()
+  title_ua: string;
 
   @IsNotEmpty()
   @IsNumber()
   index: number;
 
   @IsNotEmpty()
-  @Type(() => Number)
-  @IsArray()
-  price_standart: number[];
+  @IsNumber()
+  price_standart_en: number;
 
   @IsNotEmpty()
-  @Type(() => Number)
-  @IsArray()
-  price_double: number[];
+  @IsNumber()
+  price_double_en: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  price_standart_de: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  price_double_de: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  price_standart_ua: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  price_double_ua: number;
 
   @IsNotEmpty()
   @IsString()
-  image: string;
+  ingredients_en: string;
+
+  @IsNotEmpty()
+  @IsString()
+  ingredients_de: string;
+
+  @IsNotEmpty()
+  @IsString()
+  ingredients_ua: string;
+
+  @IsOptional()
+  @IsString()
+  imgURL?: string;
+
+  @IsOptional()
+  @IsString()
+  img2xURL?: string;
+
+  @IsOptional()
+  @IsString()
+  webpImgURL?: string;
+
+  @IsOptional()
+  @IsString()
+  webpImg2xURL?: string;
 }

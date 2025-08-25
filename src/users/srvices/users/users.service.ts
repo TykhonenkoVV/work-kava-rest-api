@@ -52,8 +52,8 @@ export class UsersService {
   }
 
   async deleteUser(id: string): Promise<UserDocument> {
-    await this.cloudinaryServices.destroyImage(`tasks/avatars/${id}`);
-    await this.cloudinaryServices.destroyImage(`tasks/avatars/${id}_small`);
+    await this.cloudinaryServices.destroyAvatar(`tasks/avatars/${id}`);
+    await this.cloudinaryServices.destroyAvatar(`tasks/avatars/${id}_small`);
     return this.userModel.findByIdAndDelete(id).exec();
   }
 }

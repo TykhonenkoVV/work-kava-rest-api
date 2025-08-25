@@ -11,7 +11,7 @@ export class BurgersService {
 
   async createBurger(owner: string, createBurgerDto: CreateBurgerDto) {
     const isMatch = await this.burgerModel.findOne({
-      title: createBurgerDto.title,
+      title_en: createBurgerDto.title_en,
     });
     if (isMatch) {
       throw new HttpException('This product name already exists.', 409);
@@ -28,10 +28,18 @@ export class BurgersService {
       burger: {
         _id: newBurger._id,
         index: newBurger.index,
-        price_standart: newBurger.price_standart,
-        price_double: newBurger.price_double,
-        title: newBurger.title,
-        image: newBurger.image,
+        title_en: newBurger.title_en,
+        title_de: newBurger.title_de,
+        title_ua: newBurger.title_ua,
+        price_standart_en: newBurger.price_standart_en,
+        price_double_en: newBurger.price_double_en,
+        price_standart_de: newBurger.price_standart_de,
+        price_double_de: newBurger.price_double_de,
+        price_standart_ua: newBurger.price_standart_ua,
+        price_double_ua: newBurger.price_double_ua,
+        ingredients_en: newBurger.ingredients_en,
+        ingredients_de: newBurger.ingredients_de,
+        ingredients_ua: newBurger.ingredients_ua,
       },
     };
   }

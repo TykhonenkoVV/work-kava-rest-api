@@ -5,19 +5,40 @@ import { User } from 'src/users/schemas/users/User.schema';
 @Schema({ versionKey: false, timestamps: true })
 export class Dessert {
   @Prop({ required: true })
-  title: string;
+  title_en: string;
+
+  @Prop({ required: true })
+  title_de: string;
+
+  @Prop({ required: true })
+  title_ua: string;
 
   @Prop({ required: true })
   index: number;
 
   @Prop({ required: true })
-  price: number[];
+  price_en: number;
+
+  @Prop({ required: true })
+  price_de: number;
+
+  @Prop({ required: true })
+  price_ua: number;
 
   @Prop({ required: true })
   weight: number;
 
-  @Prop({ required: true })
-  image: string;
+  @Prop()
+  imgURL: string;
+
+  @Prop()
+  img2xURL: string;
+
+  @Prop()
+  webpImgURL: string;
+
+  @Prop()
+  webpImg2xURL: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Owner' })
   owner: User;

@@ -1,19 +1,40 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateCoffeeWithMilkDto {
   @IsNotEmpty()
   @IsString()
-  title: string;
+  title_en: string;
+
+  @IsNotEmpty()
+  @IsString()
+  title_de: string;
+
+  @IsNotEmpty()
+  @IsString()
+  title_ua: string;
 
   @IsNotEmpty()
   @IsNumber()
   index: number;
 
   @IsNotEmpty()
-  @Type(() => Number)
-  @IsArray()
-  price: number[];
+  @IsNumber()
+  price_en: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  price_de: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  price_ua: number;
 
   @IsNotEmpty()
   @IsNumber()
@@ -27,7 +48,19 @@ export class CreateCoffeeWithMilkDto {
   @IsNumber()
   milk: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  image: string;
+  imgURL?: string;
+
+  @IsOptional()
+  @IsString()
+  img2xURL?: string;
+
+  @IsOptional()
+  @IsString()
+  webpImgURL?: string;
+
+  @IsOptional()
+  @IsString()
+  webpImg2xURL?: string;
 }

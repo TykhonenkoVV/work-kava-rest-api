@@ -6,6 +6,8 @@ import {
   CoffeeClassic,
   CoffeeClassicSchema,
 } from './schemas/coffee-classic.schema';
+import { CloudinaryService } from 'src/cloudinary/services/cloudinary/cloudinary.service';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -15,8 +17,11 @@ import {
         schema: CoffeeClassicSchema,
       },
     ]),
+    MulterModule.register({
+      dest: './uploads',
+    }),
   ],
   controllers: [CoffeeClassicController],
-  providers: [CoffeeClassicService],
+  providers: [CoffeeClassicService, CloudinaryService],
 })
 export class CoffeeClassicModule {}

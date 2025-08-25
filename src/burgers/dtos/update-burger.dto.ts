@@ -1,26 +1,71 @@
-import { Type } from 'class-transformer';
-import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UpdateBurgerDto {
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  title: string;
+  title_en?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
+  @IsString()
+  title_de?: string;
+
+  @IsOptional()
+  @IsString()
+  title_ua?: string;
+
+  @IsOptional()
   @IsNumber()
-  index: number;
+  index?: number;
 
-  @IsNotEmpty()
-  @Type(() => Number)
-  @IsArray()
-  price_standart: number[];
+  @IsOptional()
+  @IsNumber()
+  price_standart_en?: number;
 
-  @IsNotEmpty()
-  @Type(() => Number)
-  @IsArray()
-  price_double: number[];
+  @IsOptional()
+  @IsNumber()
+  price_double_en?: number;
 
-  @IsNotEmpty()
+  @IsOptional()
+  @IsNumber()
+  price_standart_de?: number;
+
+  @IsOptional()
+  @IsNumber()
+  price_double_de?: number;
+
+  @IsOptional()
+  @IsNumber()
+  price_standart_ua?: number;
+
+  @IsOptional()
+  @IsNumber()
+  price_double_ua?: number;
+
+  @IsOptional()
   @IsString()
-  image: string;
+  ingredients_en?: string;
+
+  @IsOptional()
+  @IsString()
+  ingredients_de?: string;
+
+  @IsOptional()
+  @IsString()
+  ingredients_ua?: string;
+
+  @IsOptional()
+  @IsString()
+  imgURL?: string;
+
+  @IsOptional()
+  @IsString()
+  img2xURL?: string;
+
+  @IsOptional()
+  @IsString()
+  webpImgURL?: string;
+
+  @IsOptional()
+  @IsString()
+  webpImg2xURL?: string;
 }

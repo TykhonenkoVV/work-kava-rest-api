@@ -75,12 +75,12 @@ export class UsersController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     const id = req.user['sub'];
-    const avatar = await this.cloudinaryServices.uploadImage(
+    const avatar = await this.cloudinaryServices.uploadAvatar(
       id,
       file.path,
       250,
     );
-    const avatarSmall = await this.cloudinaryServices.uploadImage(
+    const avatarSmall = await this.cloudinaryServices.uploadAvatar(
       `${id}_small`,
       file.path,
       32,

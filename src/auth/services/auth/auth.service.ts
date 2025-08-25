@@ -97,7 +97,7 @@ export class AuthService {
         },
         {
           secret: process.env.JWT_SECRET_ACCESS,
-          expiresIn: '15m',
+          expiresIn: '60m',
         },
       ),
       this.jwtService.signAsync(
@@ -120,7 +120,6 @@ export class AuthService {
 
   async refreshTokens(userId: string, refreshToken: string) {
     const user = await this.usersService.getUserById(userId);
-
     if (!user || !user.refreshToken)
       throw new ForbiddenException('Access Denied');
     const refreshTokenMatches = await bcrypt.compare(

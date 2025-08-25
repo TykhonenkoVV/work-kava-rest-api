@@ -11,7 +11,7 @@ export class HotDogsService {
 
   async createHotDog(owner: string, createHotDogDto: CreateHotDogDto) {
     const isMatch = await this.hoDogModel.findOne({
-      title: createHotDogDto.title,
+      title_en: createHotDogDto.title_en,
     });
     if (isMatch) {
       throw new HttpException('This product name already exists.', 409);
@@ -28,10 +28,18 @@ export class HotDogsService {
       hot_dog: {
         _id: newHotDog._id,
         index: newHotDog.index,
-        price_standart: newHotDog.price_standart,
-        price_double: newHotDog.price_double,
-        title: newHotDog.title,
-        image: newHotDog.image,
+        title_en: newHotDog.title_en,
+        title_de: newHotDog.title_de,
+        title_ua: newHotDog.title_ua,
+        price_standart_en: newHotDog.price_standart_en,
+        price_double_en: newHotDog.price_double_en,
+        price_standart_de: newHotDog.price_standart_de,
+        price_double_de: newHotDog.price_double_de,
+        price_standart_ua: newHotDog.price_standart_ua,
+        price_double_ua: newHotDog.price_double_ua,
+        ingredients_en: newHotDog.ingredients_en,
+        ingredients_de: newHotDog.ingredients_de,
+        ingredients_ua: newHotDog.ingredients_ua,
       },
     };
   }

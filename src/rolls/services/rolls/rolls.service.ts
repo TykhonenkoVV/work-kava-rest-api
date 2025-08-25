@@ -11,7 +11,7 @@ export class RollsService {
 
   async createRoll(owner: string, createRollDto: CreateRollDto) {
     const isMatch = await this.rollModel.findOne({
-      title: createRollDto.title,
+      title_en: createRollDto.title_en,
     });
     if (isMatch) {
       throw new HttpException('This product name already exists.', 409);
@@ -28,10 +28,18 @@ export class RollsService {
       roll: {
         _id: newRoll._id,
         index: newRoll.index,
-        price_standart: newRoll.price_standart,
-        price_xl: newRoll.price_xl,
-        title: newRoll.title,
-        image: newRoll.image,
+        title_en: newRoll.title_en,
+        title_de: newRoll.title_de,
+        title_ua: newRoll.title_ua,
+        price_standart_en: newRoll.price_standart_en,
+        price_xl_en: newRoll.price_xl_en,
+        price_standart_de: newRoll.price_standart_de,
+        price_xl_de: newRoll.price_xl_de,
+        price_standart_ua: newRoll.price_standart_ua,
+        price_xl_ua: newRoll.price_xl_ua,
+        ingredients_en: newRoll.ingredients_en,
+        ingredients_de: newRoll.ingredients_de,
+        ingredients_ua: newRoll.ingredients_ua,
       },
     };
   }

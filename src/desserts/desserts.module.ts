@@ -3,6 +3,8 @@ import { DessertsController } from './controllers/desserts/desserts.controller';
 import { DessertsService } from './services/desserts/desserts.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Dessert, DessertSchema } from './schemas/dessert.schema';
+import { MulterModule } from '@nestjs/platform-express';
+import { CloudinaryService } from 'src/cloudinary/services/cloudinary/cloudinary.service';
 
 @Module({
   imports: [
@@ -12,8 +14,11 @@ import { Dessert, DessertSchema } from './schemas/dessert.schema';
         schema: DessertSchema,
       },
     ]),
+    MulterModule.register({
+      dest: './uploads',
+    }),
   ],
   controllers: [DessertsController],
-  providers: [DessertsService],
+  providers: [DessertsService, CloudinaryService],
 })
 export class DessertsModule {}

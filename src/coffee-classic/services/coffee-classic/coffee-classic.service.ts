@@ -34,6 +34,7 @@ export class CoffeeClassicService {
       coffee_classic: {
         _id: newCoffeeClassic._id,
         index: newCoffeeClassic.index,
+        archived: newCoffeeClassic.archived,
         price_en: newCoffeeClassic.price_en,
         price_de: newCoffeeClassic.price_de,
         price_ua: newCoffeeClassic.price_ua,

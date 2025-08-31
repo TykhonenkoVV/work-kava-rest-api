@@ -28,6 +28,7 @@ export class RollsService {
       roll: {
         _id: newRoll._id,
         index: newRoll.index,
+        archived: newRoll.archived,
         title_en: newRoll.title_en,
         title_de: newRoll.title_de,
         title_ua: newRoll.title_ua,

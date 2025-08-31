@@ -18,6 +18,9 @@ export class User {
   theme: string;
 
   @Prop()
+  local: string;
+
+  @Prop()
   avatarURL: string;
 
   @Prop()

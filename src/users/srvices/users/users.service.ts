@@ -46,6 +46,7 @@ export class UsersService {
       name: result.name,
       email: result.email,
       theme: result.theme,
+      local: result.local,
       avatarURL: result.avatarURL,
       avatarURLsmall: result.avatarURLsmall,
     };

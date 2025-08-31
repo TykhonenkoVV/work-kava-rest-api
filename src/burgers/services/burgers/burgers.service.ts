@@ -28,6 +28,7 @@ export class BurgersService {
       burger: {
         _id: newBurger._id,
         index: newBurger.index,
+        archived: newBurger.archived,
         title_en: newBurger.title_en,
         title_de: newBurger.title_de,
         title_ua: newBurger.title_ua,

@@ -31,9 +31,10 @@ export class CoffeeWithMilkService {
       status: 'created',
       code: 201,
       message: 'Product created successfully',
-      offee_with_milk: {
+      coffee_with_milk: {
         _id: newCoffeeWithMilk._id,
         index: newCoffeeWithMilk.index,
+        archived: newCoffeeWithMilk.archived,
         title_en: newCoffeeWithMilk.title_en,
         title_de: newCoffeeWithMilk.title_de,
         title_ua: newCoffeeWithMilk.title_ua,

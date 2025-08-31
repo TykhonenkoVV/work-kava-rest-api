@@ -1,6 +1,20 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateHotDogDto {
+  @IsNotEmpty()
+  @IsNumber()
+  index: number;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  archived: boolean;
+
   @IsNotEmpty()
   @IsString()
   title_en: string;
@@ -12,10 +26,6 @@ export class CreateHotDogDto {
   @IsNotEmpty()
   @IsString()
   title_ua: string;
-
-  @IsNotEmpty()
-  @IsNumber()
-  index: number;
 
   @IsNotEmpty()
   @IsNumber()

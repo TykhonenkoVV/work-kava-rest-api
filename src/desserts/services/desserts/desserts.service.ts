@@ -30,6 +30,7 @@ export class DessertsService {
       dessert: {
         _id: newDesserts._id,
         index: newDesserts.index,
+        archived: newDesserts.archived,
         title_en: newDesserts.title_en,
         title_de: newDesserts.title_de,
         title_ua: newDesserts.title_ua,

@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   IsArray,
+  IsBoolean,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -8,6 +9,14 @@ import {
 } from 'class-validator';
 
 export class CreateCoffeeWithMilkDto {
+  @IsNotEmpty()
+  @IsNumber()
+  index: number;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  archived: boolean;
+
   @IsNotEmpty()
   @IsString()
   title_en: string;
@@ -19,10 +28,6 @@ export class CreateCoffeeWithMilkDto {
   @IsNotEmpty()
   @IsString()
   title_ua: string;
-
-  @IsNotEmpty()
-  @IsNumber()
-  index: number;
 
   @IsNotEmpty()
   @IsNumber()

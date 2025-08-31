@@ -1,6 +1,14 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UpdateBurgerDto {
+  @IsOptional()
+  @IsNumber()
+  index?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  archived?: boolean;
+
   @IsOptional()
   @IsString()
   title_en?: string;
@@ -12,10 +20,6 @@ export class UpdateBurgerDto {
   @IsOptional()
   @IsString()
   title_ua?: string;
-
-  @IsOptional()
-  @IsNumber()
-  index?: number;
 
   @IsOptional()
   @IsNumber()

@@ -53,6 +53,7 @@ export class AuthService {
         name: user.name,
         email: user.email,
         theme: user.theme,
+        local: user.local,
         avatarURL: user.avatarURL,
         avatarURLsmall: user.avatarURLsmall,
       },
@@ -74,6 +75,7 @@ export class AuthService {
       name: user.name,
       email: user.email,
       theme: user.theme,
+      local: user.local,
       avatarURL: user.avatarURL,
       avatarURLsmall: user.avatarURLsmall,
     };

@@ -5,6 +5,12 @@ import { User } from 'src/users/schemas/users/User.schema';
 @Schema({ versionKey: false, timestamps: true })
 export class Burger {
   @Prop({ required: true })
+  index: number;
+
+  @Prop({ required: true })
+  archived: boolean;
+
+  @Prop({ required: true })
   title_en: string;
 
   @Prop({ required: true })
@@ -12,9 +18,6 @@ export class Burger {
 
   @Prop({ required: true })
   title_ua: string;
-
-  @Prop({ required: true })
-  index: number;
 
   @Prop({ required: true })
   price_standart_en: number;

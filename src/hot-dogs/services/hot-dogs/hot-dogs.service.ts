@@ -28,6 +28,7 @@ export class HotDogsService {
       hot_dog: {
         _id: newHotDog._id,
         index: newHotDog.index,
+        archived: newHotDog.archived,
         title_en: newHotDog.title_en,
         title_de: newHotDog.title_de,
         title_ua: newHotDog.title_ua,

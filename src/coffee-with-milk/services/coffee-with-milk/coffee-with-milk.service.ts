@@ -1,6 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { CloudinaryService } from 'src/cloudinary/services/cloudinary/cloudinary.service';
 import { CreateCoffeeWithMilkDto } from 'src/coffee-with-milk/dtos/create-coffe-with-milk.dto';
 import { UpdateCoffeeWithMilkDto } from 'src/coffee-with-milk/dtos/update-coffe-with-milk.dto';
 import { CoffeeWithMilk } from 'src/coffee-with-milk/schemas/coffee-with-milk.schema';
@@ -10,6 +11,7 @@ export class CoffeeWithMilkService {
   constructor(
     @InjectModel(CoffeeWithMilk.name)
     private coffeeWithMilkModel: Model<CoffeeWithMilk>,
+    private cloudinaryServices: CloudinaryService,
   ) {}
 
   async createCoffeeWithMilk(
@@ -91,6 +93,18 @@ export class CoffeeWithMilkService {
       await this.coffeeWithMilkModel.findByIdAndDelete({
         _id: id,
       });
+    await this.cloudinaryServices.destroyImage(
+      `workkava/cafe/coffee-with-milk/${id}`,
+    );
+    await this.cloudinaryServices.destroyImage(
+      `workkava/cafe/coffee-with-milk/${id}_2x`,
+    );
+    await this.cloudinaryServices.destroyImage(
+      `workkava/cafe/coffee-with-milk-webp/${id}`,
+    );
+    await this.cloudinaryServices.destroyImage(
+      `workkava/cafe/coffee-with-milk-webp/${id}_2x`,
+    );
     return {
       status: 'success',
       code: 200,

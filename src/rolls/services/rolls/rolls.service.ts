@@ -1,13 +1,17 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { CloudinaryService } from 'src/cloudinary/services/cloudinary/cloudinary.service';
 import { CreateRollDto } from 'src/rolls/dtos/create-roll.dto';
 import { UpdateRollDto } from 'src/rolls/dtos/update-roll.dto';
 import { Roll } from 'src/rolls/schemas/roll.schema';
 
 @Injectable()
 export class RollsService {
-  constructor(@InjectModel(Roll.name) private rollModel: Model<Roll>) {}
+  constructor(
+    @InjectModel(Roll.name) private rollModel: Model<Roll>,
+    private cloudinaryServices: CloudinaryService,
+  ) {}
 
   async createRoll(owner: string, createRollDto: CreateRollDto) {
     const isMatch = await this.rollModel.findOne({
@@ -83,6 +87,16 @@ export class RollsService {
     const isFinded = await this.getRollById(id);
     if (!isFinded) throw new HttpException('Product not found.', 404);
     const deletedRoll = await this.rollModel.findByIdAndDelete({ _id: id });
+    await this.cloudinaryServices.destroyImage(`workkava/fastfood/rolls/${id}`);
+    await this.cloudinaryServices.destroyImage(
+      `workkava/fastfood/rolls/${id}_2x`,
+    );
+    await this.cloudinaryServices.destroyImage(
+      `workkava/fastfood/rolls-webp/${id}`,
+    );
+    await this.cloudinaryServices.destroyImage(
+      `workkava/fastfood/rolls-webp/${id}_2x`,
+    );
     return {
       status: 'success',
       code: 200,

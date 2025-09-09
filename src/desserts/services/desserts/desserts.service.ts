@@ -1,6 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { CloudinaryService } from 'src/cloudinary/services/cloudinary/cloudinary.service';
 import { CreateDessertDto } from 'src/desserts/dtos/create-dessert.dto';
 import { UpdateDessertDto } from 'src/desserts/dtos/update-dessert.dto';
 import { Dessert } from 'src/desserts/schemas/dessert.schema';
@@ -9,6 +10,7 @@ import { Dessert } from 'src/desserts/schemas/dessert.schema';
 export class DessertsService {
   constructor(
     @InjectModel(Dessert.name) private dessertModel: Model<Dessert>,
+    private cloudinaryServices: CloudinaryService,
   ) {}
 
   async createDessert(owner: string, createDessertDto: CreateDessertDto) {
@@ -82,6 +84,16 @@ export class DessertsService {
     const deletedDessert = await this.dessertModel.findByIdAndDelete({
       _id: id,
     });
+    await this.cloudinaryServices.destroyImage(`workkava/cafe/desserts/${id}`);
+    await this.cloudinaryServices.destroyImage(
+      `workkava/cafe/desserts/${id}_2x`,
+    );
+    await this.cloudinaryServices.destroyImage(
+      `workkava/cafe/desserts-webp/${id}`,
+    );
+    await this.cloudinaryServices.destroyImage(
+      `workkava/cafe/desserts-webp/${id}_2x`,
+    );
     return {
       status: 'success',
       code: 200,

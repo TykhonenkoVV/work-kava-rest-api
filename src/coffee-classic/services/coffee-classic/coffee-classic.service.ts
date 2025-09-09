@@ -1,6 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { CloudinaryService } from 'src/cloudinary/services/cloudinary/cloudinary.service';
 import { CreateCoffeeClassicDto } from 'src/coffee-classic/dtos/create-coffee-classic.dto';
 import { UpdateCoffeeClassicDto } from 'src/coffee-classic/dtos/update-coffee-classic.dto';
 import { CoffeeClassic } from 'src/coffee-classic/schemas/coffee-classic.schema';
@@ -10,6 +11,7 @@ export class CoffeeClassicService {
   constructor(
     @InjectModel(CoffeeClassic.name)
     private coffeeClassicModel: Model<CoffeeClassic>,
+    private cloudinaryServices: CloudinaryService,
   ) {}
 
   async createCoffeeClassic(
@@ -91,6 +93,18 @@ export class CoffeeClassicService {
       await this.coffeeClassicModel.findByIdAndDelete({
         _id: id,
       });
+    await this.cloudinaryServices.destroyImage(
+      `workkava/cafe/coffee-classic/${id}`,
+    );
+    await this.cloudinaryServices.destroyImage(
+      `workkava/cafe/coffee-classic/${id}_2x`,
+    );
+    await this.cloudinaryServices.destroyImage(
+      `workkava/cafe/coffee-classic-webp/${id}`,
+    );
+    await this.cloudinaryServices.destroyImage(
+      `workkava/cafe/coffee-classic-webp/${id}_2x`,
+    );
     return {
       status: 'success',
       code: 200,

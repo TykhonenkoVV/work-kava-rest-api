@@ -4,10 +4,14 @@ import { Model } from 'mongoose';
 import { CreateBurgerDto } from 'src/burgers/dtos/create-burger.dto';
 import { UpdateBurgerDto } from 'src/burgers/dtos/update-burger.dto';
 import { Burger } from 'src/burgers/schemas/burger.schema';
+import { CloudinaryService } from 'src/cloudinary/services/cloudinary/cloudinary.service';
 
 @Injectable()
 export class BurgersService {
-  constructor(@InjectModel(Burger.name) private burgerModel: Model<Burger>) {}
+  constructor(
+    @InjectModel(Burger.name) private burgerModel: Model<Burger>,
+    private cloudinaryServices: CloudinaryService,
+  ) {}
 
   async createBurger(owner: string, createBurgerDto: CreateBurgerDto) {
     const isMatch = await this.burgerModel.findOne({
@@ -85,6 +89,18 @@ export class BurgersService {
     const deletedBurger = await this.burgerModel.findByIdAndDelete({
       _id: id,
     });
+    await this.cloudinaryServices.destroyImage(
+      `workkava/fastfood/burgers/${id}`,
+    );
+    await this.cloudinaryServices.destroyImage(
+      `workkava/fastfood/burgers/${id}_2x`,
+    );
+    await this.cloudinaryServices.destroyImage(
+      `workkava/fastfood/burgers-webp/${id}`,
+    );
+    await this.cloudinaryServices.destroyImage(
+      `workkava/fastfood/burgers-webp/${id}_2x`,
+    );
     return {
       status: 'success',
       code: 200,

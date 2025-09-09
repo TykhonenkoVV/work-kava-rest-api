@@ -1,13 +1,17 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { CloudinaryService } from 'src/cloudinary/services/cloudinary/cloudinary.service';
 import { CreateHotDogDto } from 'src/hot-dogs/dtos/create-hot-dog.dto';
 import { UpdateHotDogDto } from 'src/hot-dogs/dtos/update-hot-dog.dto';
 import { HotDog } from 'src/hot-dogs/schemas/hot-dog.schema';
 
 @Injectable()
 export class HotDogsService {
-  constructor(@InjectModel(HotDog.name) private hoDogModel: Model<HotDog>) {}
+  constructor(
+    @InjectModel(HotDog.name) private hoDogModel: Model<HotDog>,
+    private cloudinaryServices: CloudinaryService,
+  ) {}
 
   async createHotDog(owner: string, createHotDogDto: CreateHotDogDto) {
     const isMatch = await this.hoDogModel.findOne({
@@ -85,6 +89,18 @@ export class HotDogsService {
     const deletedHotDog = await this.hoDogModel.findByIdAndDelete({
       _id: id,
     });
+    await this.cloudinaryServices.destroyImage(
+      `workkava/fastfood/hot-dogs/${id}`,
+    );
+    await this.cloudinaryServices.destroyImage(
+      `workkava/fastfood/hot-dogs/${id}_2x`,
+    );
+    await this.cloudinaryServices.destroyImage(
+      `workkava/fastfood/hot-dogs-webp/${id}`,
+    );
+    await this.cloudinaryServices.destroyImage(
+      `workkava/fastfood/hot-dogs-webp/${id}_2x`,
+    );
     return {
       status: 'success',
       code: 200,

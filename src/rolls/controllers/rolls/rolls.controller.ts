@@ -23,6 +23,7 @@ import { RollsService } from 'src/rolls/services/rolls/rolls.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from 'src/cloudinary/services/cloudinary/cloudinary.service';
 import * as fs from 'fs';
+import { ImagesUrl } from 'src/common/helpers/interfaces';
 
 @Controller('api/rolls')
 export class RollsController {
@@ -79,54 +80,60 @@ export class RollsController {
   ) {
     const id = req.body.id;
 
-    const img = await this.cloudinaryServices.uploadImage(
-      id,
-      files?.img[0]?.path,
-      'workkava/fastfood/rolls',
-      470,
-      260,
-    );
-    const img2x = await this.cloudinaryServices.uploadImage(
-      `${id}_2x`,
-      files?.img[0]?.path,
-      'workkava/fastfood/rolls',
-      null,
-      null,
-    );
-    const webpImg = await this.cloudinaryServices.uploadImage(
-      id,
-      files?.webpImg[0]?.path,
-      'workkava/fastfood/rolls-webp',
-      470,
-      260,
-    );
-    const webpImg2x = await this.cloudinaryServices.uploadImage(
-      `${id}_2x`,
-      files?.webpImg[0]?.path,
-      'workkava/fastfood/rolls-webp',
-      null,
-      null,
-    );
+    let payload: ImagesUrl = {};
 
-    const data = await this.rollsServices.updateRoll(id, {
-      imgURL: img.secure_url,
-      img2xURL: img2x.secure_url,
-      webpImgURL: webpImg.secure_url,
-      webpImg2xURL: webpImg2x.secure_url,
-    });
+    if (files.img) {
+      const img = await this.cloudinaryServices.uploadImage(
+        id,
+        files?.img[0]?.path,
+        'workkava/fastfood/rolls',
+        470,
+        260,
+      );
+      const img2x = await this.cloudinaryServices.uploadImage(
+        `${id}_2x`,
+        files?.img[0]?.path,
+        'workkava/fastfood/rolls',
+        null,
+        null,
+      );
+      payload.imgURL = img.secure_url;
+      payload.img2xURL = img2x.secure_url;
 
-    fs.unlink(files?.img[0]?.path, (err) => {
-      if (err) {
-        console.error(err);
-        return err;
-      }
-    });
-    fs.unlink(files?.webpImg[0]?.path, (err) => {
-      if (err) {
-        console.error(err);
-        return err;
-      }
-    });
+      fs.unlink(files?.img[0]?.path, (err) => {
+        if (err) {
+          console.error(err);
+          return err;
+        }
+      });
+    }
+    if (files.webpImg) {
+      const webpImg = await this.cloudinaryServices.uploadImage(
+        id,
+        files?.webpImg[0]?.path,
+        'workkava/fastfood/rolls-webp',
+        470,
+        260,
+      );
+      const webpImg2x = await this.cloudinaryServices.uploadImage(
+        `${id}_2x`,
+        files?.webpImg[0]?.path,
+        'workkava/fastfood/rolls-webp',
+        null,
+        null,
+      );
+      payload.webpImgURL = webpImg.secure_url;
+      payload.webpImg2xURL = webpImg2x.secure_url;
+
+      fs.unlink(files?.webpImg[0]?.path, (err) => {
+        if (err) {
+          console.error(err);
+          return err;
+        }
+      });
+    }
+
+    const data = await this.rollsServices.updateRoll(id, payload);
 
     return data;
   }

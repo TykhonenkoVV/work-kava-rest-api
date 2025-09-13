@@ -23,6 +23,7 @@ import { UpdateCoffeeClassicDto } from 'src/coffee-classic/dtos/update-coffee-cl
 import { CoffeeClassicService } from 'src/coffee-classic/services/coffee-classic/coffee-classic.service';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 import * as fs from 'fs';
+import { ImagesUrl } from 'src/common/helpers/interfaces';
 
 @Controller('api/coffeeclassics')
 export class CoffeeClassicController {
@@ -90,54 +91,63 @@ export class CoffeeClassicController {
   ) {
     const id = req.body.id;
 
-    const img = await this.cloudinaryServices.uploadImage(
-      id,
-      files?.img[0]?.path,
-      'workkava/cafe/coffee-classic',
-      470,
-      260,
-    );
-    const img2x = await this.cloudinaryServices.uploadImage(
-      `${id}_2x`,
-      files?.img[0]?.path,
-      'workkava/cafe/coffee-classic',
-      null,
-      null,
-    );
-    const webpImg = await this.cloudinaryServices.uploadImage(
-      id,
-      files?.webpImg[0]?.path,
-      'workkava/cafe/coffee-classic-webp',
-      470,
-      260,
-    );
-    const webpImg2x = await this.cloudinaryServices.uploadImage(
-      `${id}_2x`,
-      files?.webpImg[0]?.path,
-      'workkava/cafe/coffee-classic-webp',
-      null,
-      null,
-    );
+    let payload: ImagesUrl = {};
 
-    const data = await this.caffeeClassicServices.updateCoffeeClassic(id, {
-      imgURL: img.secure_url,
-      img2xURL: img2x.secure_url,
-      webpImgURL: webpImg.secure_url,
-      webpImg2xURL: webpImg2x.secure_url,
-    });
+    if (files.img) {
+      const img = await this.cloudinaryServices.uploadImage(
+        id,
+        files?.img[0]?.path,
+        'workkava/cafe/coffee-classic',
+        470,
+        260,
+      );
+      const img2x = await this.cloudinaryServices.uploadImage(
+        `${id}_2x`,
+        files?.img[0]?.path,
+        'workkava/cafe/coffee-classic',
+        null,
+        null,
+      );
+      payload.imgURL = img.secure_url;
+      payload.img2xURL = img2x.secure_url;
 
-    fs.unlink(files?.img[0]?.path, (err) => {
-      if (err) {
-        console.error(err);
-        return err;
-      }
-    });
-    fs.unlink(files?.webpImg[0]?.path, (err) => {
-      if (err) {
-        console.error(err);
-        return err;
-      }
-    });
+      fs.unlink(files?.img[0]?.path, (err) => {
+        if (err) {
+          console.error(err);
+          return err;
+        }
+      });
+    }
+    if (files.webpImg) {
+      const webpImg = await this.cloudinaryServices.uploadImage(
+        id,
+        files?.webpImg[0]?.path,
+        'workkava/cafe/coffee-classic-webp',
+        470,
+        260,
+      );
+      const webpImg2x = await this.cloudinaryServices.uploadImage(
+        `${id}_2x`,
+        files?.webpImg[0]?.path,
+        'workkava/cafe/coffee-classic-webp',
+        null,
+        null,
+      );
+      payload.webpImgURL = webpImg.secure_url;
+      payload.webpImg2xURL = webpImg2x.secure_url;
+
+      fs.unlink(files?.webpImg[0]?.path, (err) => {
+        if (err) {
+          console.error(err);
+          return err;
+        }
+      });
+    }
+
+    const data = await this.caffeeClassicServices.updateCoffeeClassic(
+      id,
+      payload,
+    );
 
     return data;
   }

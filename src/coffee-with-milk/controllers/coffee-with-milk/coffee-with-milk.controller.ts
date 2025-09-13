@@ -23,6 +23,7 @@ import { UpdateCoffeeWithMilkDto } from 'src/coffee-with-milk/dtos/update-coffe-
 import { CoffeeWithMilkService } from 'src/coffee-with-milk/services/coffee-with-milk/coffee-with-milk.service';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 import * as fs from 'fs';
+import { ImagesUrl } from 'src/common/helpers/interfaces';
 
 @Controller('api/coffeewithmilks')
 export class CoffeeWithMilkController {
@@ -91,54 +92,63 @@ export class CoffeeWithMilkController {
   ) {
     const id = req.body.id;
 
-    const img = await this.cloudinaryServices.uploadImage(
-      id,
-      files?.img[0]?.path,
-      'workkava/cafe/coffee-with-milk',
-      470,
-      260,
-    );
-    const img2x = await this.cloudinaryServices.uploadImage(
-      `${id}_2x`,
-      files?.img[0]?.path,
-      'workkava/cafe/coffee-with-milk',
-      null,
-      null,
-    );
-    const webpImg = await this.cloudinaryServices.uploadImage(
-      id,
-      files?.webpImg[0]?.path,
-      'workkava/cafe/coffee-with-milk-webp',
-      470,
-      260,
-    );
-    const webpImg2x = await this.cloudinaryServices.uploadImage(
-      `${id}_2x`,
-      files?.webpImg[0]?.path,
-      'workkava/cafe/coffee-with-milk-webp',
-      null,
-      null,
-    );
+    let payload: ImagesUrl = {};
 
-    const data = await this.coffeeWithMilkServices.updateCoffeeWithMilk(id, {
-      imgURL: img.secure_url,
-      img2xURL: img2x.secure_url,
-      webpImgURL: webpImg.secure_url,
-      webpImg2xURL: webpImg2x.secure_url,
-    });
+    if (files.img) {
+      const img = await this.cloudinaryServices.uploadImage(
+        id,
+        files?.img[0]?.path,
+        'workkava/cafe/coffee-with-milk',
+        470,
+        260,
+      );
+      const img2x = await this.cloudinaryServices.uploadImage(
+        `${id}_2x`,
+        files?.img[0]?.path,
+        'workkava/cafe/coffee-with-milk',
+        null,
+        null,
+      );
+      payload.imgURL = img.secure_url;
+      payload.img2xURL = img2x.secure_url;
 
-    fs.unlink(files?.img[0]?.path, (err) => {
-      if (err) {
-        console.error(err);
-        return err;
-      }
-    });
-    fs.unlink(files?.webpImg[0]?.path, (err) => {
-      if (err) {
-        console.error(err);
-        return err;
-      }
-    });
+      fs.unlink(files?.img[0]?.path, (err) => {
+        if (err) {
+          console.error(err);
+          return err;
+        }
+      });
+    }
+    if (files.webpImg) {
+      const webpImg = await this.cloudinaryServices.uploadImage(
+        id,
+        files?.webpImg[0]?.path,
+        'workkava/cafe/coffee-with-milk-webp',
+        470,
+        260,
+      );
+      const webpImg2x = await this.cloudinaryServices.uploadImage(
+        `${id}_2x`,
+        files?.webpImg[0]?.path,
+        'workkava/cafe/coffee-with-milk-webp',
+        null,
+        null,
+      );
+      payload.webpImgURL = webpImg.secure_url;
+      payload.webpImg2xURL = webpImg2x.secure_url;
+
+      fs.unlink(files?.webpImg[0]?.path, (err) => {
+        if (err) {
+          console.error(err);
+          return err;
+        }
+      });
+    }
+
+    const data = await this.coffeeWithMilkServices.updateCoffeeWithMilk(
+      id,
+      payload,
+    );
 
     return data;
   }

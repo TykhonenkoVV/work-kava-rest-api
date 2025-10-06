@@ -49,8 +49,20 @@ export class CoffeeClassicService {
     };
   }
 
-  async getCoffeeClassic() {
+  async getAllCoffeeClassic() {
     const coffeeClassicArr = await this.coffeeClassicModel.find();
+    return {
+      status: 'success',
+      code: 200,
+      message: 'Products successfully received',
+      coffee_classic: coffeeClassicArr,
+    };
+  }
+
+  async getCoffeeClassic() {
+    const coffeeClassicArr = await this.coffeeClassicModel.find({
+      archived: false,
+    });
     return {
       status: 'success',
       code: 200,

@@ -49,8 +49,18 @@ export class RollsService {
     };
   }
 
-  async getRolls() {
+  async getAllRolls() {
     const rollsArr = await this.rollModel.find();
+    return {
+      status: 'success',
+      code: 200,
+      message: 'Products successfully received',
+      rolls: rollsArr,
+    };
+  }
+
+  async getRolls() {
+    const rollsArr = await this.rollModel.find({ archived: false });
     return {
       status: 'success',
       code: 200,

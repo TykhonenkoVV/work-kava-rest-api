@@ -44,8 +44,18 @@ export class DessertsService {
     };
   }
 
-  async getDesserts() {
+  async getAllDesserts() {
     const dessertsArr = await this.dessertModel.find();
+    return {
+      status: 'success',
+      code: 200,
+      message: 'Products successfully received',
+      desserts: dessertsArr,
+    };
+  }
+
+  async getDesserts() {
+    const dessertsArr = await this.dessertModel.find({ archived: false });
     return {
       status: 'success',
       code: 200,

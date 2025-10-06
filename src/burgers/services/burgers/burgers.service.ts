@@ -49,8 +49,18 @@ export class BurgersService {
     };
   }
 
-  async getBurgers() {
+  async getAllBurgers() {
     const burgersArr = await this.burgerModel.find();
+    return {
+      status: 'success',
+      code: 200,
+      message: 'Products successfully received',
+      burgers: burgersArr,
+    };
+  }
+
+  async getBurgers() {
+    const burgersArr = await this.burgerModel.find({ archived: false });
     return {
       status: 'success',
       code: 200,

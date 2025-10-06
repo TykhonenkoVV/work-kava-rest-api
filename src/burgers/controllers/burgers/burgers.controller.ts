@@ -40,6 +40,11 @@ export class BurgersController {
     return this.burgersServices.createBurger(owner, createBurgerDto);
   }
 
+  @Get('all')
+  getAllBurgers() {
+    return this.burgersServices.getAllBurgers();
+  }
+
   @Get()
   getBurgers() {
     return this.burgersServices.getBurgers();

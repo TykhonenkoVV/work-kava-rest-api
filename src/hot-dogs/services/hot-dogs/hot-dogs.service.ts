@@ -49,8 +49,18 @@ export class HotDogsService {
     };
   }
 
-  async getHotDogs() {
+  async getAllHotDogs() {
     const hotDogsArr = await this.hoDogModel.find();
+    return {
+      status: 'success',
+      code: 200,
+      message: 'Products successfully received',
+      hot_dogs: hotDogsArr,
+    };
+  }
+
+  async getHotDogs() {
+    const hotDogsArr = await this.hoDogModel.find({ archived: false });
     return {
       status: 'success',
       code: 200,

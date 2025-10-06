@@ -49,8 +49,21 @@ export class CoffeeWithMilkService {
       },
     };
   }
-  async getCoffeeWithMilk() {
+
+  async getAllCoffeeWithMilk() {
     const coffeeWithMilkArr = await this.coffeeWithMilkModel.find();
+    return {
+      status: 'success',
+      code: 200,
+      message: 'Products successfully received',
+      coffee_with_milk: coffeeWithMilkArr,
+    };
+  }
+
+  async getCoffeeWithMilk() {
+    const coffeeWithMilkArr = await this.coffeeWithMilkModel.find({
+      archived: false,
+    });
     return {
       status: 'success',
       code: 200,

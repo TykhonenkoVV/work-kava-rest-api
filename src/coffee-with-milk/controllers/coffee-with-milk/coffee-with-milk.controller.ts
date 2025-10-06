@@ -46,6 +46,11 @@ export class CoffeeWithMilkController {
     );
   }
 
+  @Get('all')
+  getAllCoffeeWithMilk() {
+    return this.coffeeWithMilkServices.getAllCoffeeWithMilk();
+  }
+
   @Get()
   getCoffeeWithMilk() {
     return this.coffeeWithMilkServices.getCoffeeWithMilk();

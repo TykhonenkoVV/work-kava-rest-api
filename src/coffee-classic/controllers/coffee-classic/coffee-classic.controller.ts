@@ -45,6 +45,11 @@ export class CoffeeClassicController {
     );
   }
 
+  @Get('all')
+  getAllCoffeeClassic() {
+    return this.caffeeClassicServices.getAllCoffeeClassic();
+  }
+
   @Get()
   getCoffeeClassic() {
     return this.caffeeClassicServices.getCoffeeClassic();

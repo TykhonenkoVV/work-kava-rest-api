@@ -39,6 +39,11 @@ export class HotDogsController {
     return this.hotDogsServices.createHotDog(owner, createHotDogDto);
   }
 
+  @Get('all')
+  getAllHotDogs() {
+    return this.hotDogsServices.getAllHotDogs();
+  }
+
   @Get()
   getHotDogs() {
     return this.hotDogsServices.getHotDogs();

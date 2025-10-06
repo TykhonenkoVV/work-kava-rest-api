@@ -42,6 +42,11 @@ export class DessertsController {
     return this.dessertsServices.createDessert(owner, createDessertDto);
   }
 
+  @Get('all')
+  getAllDesserts() {
+    return this.dessertsServices.getAllDesserts();
+  }
+
   @Get()
   getDesserts() {
     return this.dessertsServices.getDesserts();

@@ -40,6 +40,11 @@ export class RollsController {
     return this.rollsServices.createRoll(owner, createRollDto);
   }
 
+  @Get('all')
+  getAllRolls() {
+    return this.rollsServices.getAllRolls();
+  }
+
   @Get()
   getRolls() {
     return this.rollsServices.getRolls();

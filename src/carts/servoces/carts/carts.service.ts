@@ -19,6 +19,7 @@ export class CartsService {
       code: 201,
       message: 'Product created successfully',
       product: {
+        _id: newCart._id,
         productId: newCart.productId,
         standart: newCart.standart,
         xl: newCart.xl,

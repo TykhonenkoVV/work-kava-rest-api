@@ -8,15 +8,22 @@ import { RefreshTokenStrategy } from './strategies/refreshToken.strategy';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { UuidModule } from 'nestjs-uuid';
 import { HelpModule } from 'src/help/help.module';
+import { AdminModule } from 'src/admins/admins.module';
 
 @Module({
-    imports: [UsersModule, UuidModule, HelpModule, JwtModule.register({})],
-    controllers: [AuthController],
-    providers: [
-        AuthService,
-        AccessTokenStrategy,
-        RefreshTokenStrategy,
-        GoogleStrategy,
-    ],
+  imports: [
+    AdminModule,
+    UsersModule,
+    UuidModule,
+    HelpModule,
+    JwtModule.register({}),
+  ],
+  controllers: [AuthController],
+  providers: [
+    AuthService,
+    AccessTokenStrategy,
+    RefreshTokenStrategy,
+    GoogleStrategy,
+  ],
 })
 export class AuthModule {}

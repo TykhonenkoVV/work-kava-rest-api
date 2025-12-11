@@ -33,6 +33,12 @@ export class AuthController {
   }
 
   @Public()
+  @Post('signinadmin')
+  signInAdmin(@Body() authDto: AuthDto) {
+    return this.authService.signInAdmin(authDto);
+  }
+
+  @Public()
   @Get('google')
   @UseGuards(AuthGuard('google'))
   googleAuth() {}

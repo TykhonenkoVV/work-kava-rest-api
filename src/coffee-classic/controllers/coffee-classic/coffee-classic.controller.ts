@@ -25,7 +25,7 @@ import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 import * as fs from 'fs';
 import { ImagesUrl } from 'src/common/helpers/interfaces';
 
-@Controller('api/coffeeclassics')
+@Controller('api/coffee-classic')
 export class CoffeeClassicController {
   constructor(
     private caffeeClassicServices: CoffeeClassicService,
@@ -53,6 +53,11 @@ export class CoffeeClassicController {
   @Get()
   getCoffeeClassic() {
     return this.caffeeClassicServices.getCoffeeClassic();
+  }
+
+  @Get(':id')
+  getCoffeeClassicById(@Param('id') id: string) {
+    return this.caffeeClassicServices.getCoffeeClassicById(id);
   }
 
   @UseGuards(AccessTokenGuard)

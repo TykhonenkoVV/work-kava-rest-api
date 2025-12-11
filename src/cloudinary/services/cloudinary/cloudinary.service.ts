@@ -17,13 +17,14 @@ export class CloudinaryService {
   async uploadAvatar(
     fileName: string,
     filePath: string,
+    imageFolder: string,
     width: number,
   ): Promise<UploadApiResponse | UploadApiErrorResponse> {
     return new Promise((resolve, reject) => {
       v2.uploader.upload(
         filePath,
         {
-          folder: 'tasks/avatars',
+          folder: imageFolder,
           public_id: fileName,
           transformation: {
             width: width,

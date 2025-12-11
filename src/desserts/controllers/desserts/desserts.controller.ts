@@ -52,6 +52,11 @@ export class DessertsController {
     return this.dessertsServices.getDesserts();
   }
 
+  @Get(':id')
+  getDessertById(@Param('id') id: string) {
+    return this.dessertsServices.getDessertById(id);
+  }
+
   @UseGuards(AccessTokenGuard)
   @Patch(':id')
   @UsePipes(new ValidationPipe())

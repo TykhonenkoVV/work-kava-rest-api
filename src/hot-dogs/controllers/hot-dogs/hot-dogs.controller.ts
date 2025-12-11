@@ -25,7 +25,7 @@ import { CloudinaryService } from 'src/cloudinary/services/cloudinary/cloudinary
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ImagesUrl } from 'src/common/helpers/interfaces';
 
-@Controller('api/hotdogs')
+@Controller('api/hot-dogs')
 export class HotDogsController {
   constructor(
     private hotDogsServices: HotDogsService,
@@ -47,6 +47,11 @@ export class HotDogsController {
   @Get()
   getHotDogs() {
     return this.hotDogsServices.getHotDogs();
+  }
+
+  @Get(':id')
+  getHotDogById(@Param('id') id: string) {
+    return this.hotDogsServices.getHotDogById(id);
   }
 
   @UseGuards(AccessTokenGuard)

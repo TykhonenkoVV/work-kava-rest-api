@@ -19,52 +19,55 @@ import { Request } from 'express';
 import mongoose from 'mongoose';
 import { CloudinaryService } from 'src/cloudinary/services/cloudinary/cloudinary.service';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
-import { CreateUserDto } from 'src/users/dtos/CreateUser.dto';
-import { UpdateUserDto } from 'src/users/dtos/UpdateUser.dto';
-import { UsersService } from 'src/users/srvices/users/users.service';
 import * as fs from 'fs';
+import { AdminsService } from 'src/admins/srvices/admins/admins.service';
+import { CreateAdminDto } from 'src/admins/dtos/CreateAdmin.dto';
+import { UpdateAdminDto } from 'src/admins/dtos/UpdateAdmin.dto';
 
-@Controller('api/users')
-export class UsersController {
+@Controller('api/admins')
+export class AdminsController {
   constructor(
-    private usersServices: UsersService,
+    private adminsServices: AdminsService,
     private cloudinaryServices: CloudinaryService,
   ) {}
 
   @Post('register')
   @UsePipes(new ValidationPipe())
-  createUser(@Body() createUserDto: CreateUserDto) {
-    return this.usersServices.createUser(createUserDto);
+  createUser(@Body() createAdminDto: CreateAdminDto) {
+    return this.adminsServices.createAdmin(createAdminDto);
   }
 
   @Get()
   getUsers() {
-    return this.usersServices.getUsers();
+    return this.adminsServices.getAdmins();
   }
 
   @Get(':id')
-  getUserById(@Param('id') id: string) {
+  getAdminById(@Param('id') id: string) {
     const isValidId = mongoose.Types.ObjectId.isValid(id);
-    if (!isValidId) throw new HttpException('User not found.', 404);
-    const findedUser = this.usersServices.getUserById(id);
-    if (!findedUser) throw new HttpException('User not found.', 404);
-    return findedUser;
+    if (!isValidId) throw new HttpException('Admin not found.', 404);
+    const findedAdmin = this.adminsServices.getAdminById(id);
+    if (!findedAdmin) throw new HttpException('Admin not found.', 404);
+    return findedAdmin;
   }
 
   @UseGuards(AccessTokenGuard)
   @Patch()
   @UsePipes(new ValidationPipe())
-  updateUser(@Body() updateUserDto: UpdateUserDto, @Req() req: Request) {
-    const userId = req.user['sub'];
-    const updatedUser = this.usersServices.updateUser(userId, updateUserDto);
-    if (!updatedUser) throw new HttpException('User not found', 404);
-    return updatedUser;
+  updateAdmin(@Body() updateAdminDto: UpdateAdminDto, @Req() req: Request) {
+    const adminId = req.user['sub'];
+    const updatedAdmin = this.adminsServices.updateAdmin(
+      adminId,
+      updateAdminDto,
+    );
+    if (!updatedAdmin) throw new HttpException('Admin not found', 404);
+    return updatedAdmin;
   }
 
   @UseGuards(AccessTokenGuard)
   @Delete(':id')
   deleteUser(@Param('id') id: string) {
-    return this.usersServices.deleteUser(id);
+    return this.adminsServices.deleteAdmin(id);
   }
 
   @UseGuards(AccessTokenGuard)
@@ -78,11 +81,11 @@ export class UsersController {
     const avatar = await this.cloudinaryServices.uploadAvatar(
       id,
       file.path,
-      'workkava/usersavatars',
+      'workkava/adminsavatars',
       400,
     );
 
-    await this.usersServices.updateUser(id, {
+    await this.adminsServices.updateAdmin(id, {
       avatarURL: `v${avatar.version}/${avatar.public_id}`,
     });
 

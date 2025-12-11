@@ -50,6 +50,11 @@ export class BurgersController {
     return this.burgersServices.getBurgers();
   }
 
+  @Get(':id')
+  getBurgerById(@Param('id') id: string) {
+    return this.burgersServices.getBurgerById(id);
+  }
+
   @UseGuards(AccessTokenGuard)
   @Patch(':id')
   @UsePipes(new ValidationPipe())

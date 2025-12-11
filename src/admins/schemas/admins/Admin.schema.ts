@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-export type UserDocument = User & Document;
+export type AdminDocument = Admin & Document;
 
 @Schema({ versionKey: false, timestamps: true })
-export class User {
+export class Admin {
   @Prop({ required: true })
   password: string;
 
@@ -24,10 +24,13 @@ export class User {
   avatarURL: string;
 
   @Prop()
+  avatarURLsmall: string;
+
+  @Prop()
   refreshToken: string;
 
   @Prop({ enum: ['ADMIN', 'EMPLOYEE', 'USER'] })
   role: string;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const AdminSchema = SchemaFactory.createForClass(Admin);

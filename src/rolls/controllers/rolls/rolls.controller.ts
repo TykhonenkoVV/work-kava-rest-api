@@ -50,6 +50,11 @@ export class RollsController {
     return this.rollsServices.getRolls();
   }
 
+  @Get(':id')
+  getRollById(@Param('id') id: string) {
+    return this.rollsServices.getRollById(id);
+  }
+
   @UseGuards(AccessTokenGuard)
   @Patch(':id')
   @UsePipes(new ValidationPipe())

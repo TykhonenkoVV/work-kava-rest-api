@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/users/schemas/users/User.schema';
@@ -22,6 +22,10 @@ export class UsersService {
     return this.userModel.findOne({ email }).exec();
   }
 
+  async getCurrentAdmin(email: string): Promise<UserDocument> {
+    return this.userModel.findOne({ email }).exec();
+  }
+
   async getUsers() {
     return this.userModel.find();
   }
@@ -32,8 +36,22 @@ export class UsersService {
 
   async updateUser(userId: string, updateUserDto: UpdateUserDto) {
     if (updateUserDto.password) {
+      const user = await this.getUserById(userId);
+      if (!user) throw new HttpException('User not found', 404);
+
+      const isMatch = await bcrypt.compare(
+        updateUserDto.password,
+        user.password,
+      );
+
+      if (!isMatch) {
+        throw new BadRequestException('Password or email is incorrect');
+      }
+    }
+
+    if (updateUserDto.newPassword) {
       const salt = await bcrypt.genSalt();
-      const hashPassword = await bcrypt.hash(updateUserDto.password, salt);
+      const hashPassword = await bcrypt.hash(updateUserDto.newPassword, salt);
       updateUserDto.password = hashPassword;
     }
     const result = await this.userModel
@@ -46,15 +64,13 @@ export class UsersService {
       name: result.name,
       email: result.email,
       theme: result.theme,
-      local: result.local,
+      locale: result.locale,
       avatarURL: result.avatarURL,
-      avatarURLsmall: result.avatarURLsmall,
     };
   }
 
   async deleteUser(id: string): Promise<UserDocument> {
     await this.cloudinaryServices.destroyAvatar(`tasks/avatars/${id}`);
-    await this.cloudinaryServices.destroyAvatar(`tasks/avatars/${id}_small`);
     return this.userModel.findByIdAndDelete(id).exec();
   }
 }

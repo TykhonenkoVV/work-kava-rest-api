@@ -9,10 +9,12 @@ import { UsersService } from 'src/users/srvices/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from 'src/users/dtos/CreateUser.dto';
 import { AuthDto } from 'src/auth/dtos/Auth.dto';
+import { AdminsService } from 'src/admins/srvices/admins/admins.service';
 
 @Injectable()
 export class AuthService {
   constructor(
+    private adminsService: AdminsService,
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
@@ -28,7 +30,7 @@ export class AuthService {
     const newUser = await this.usersService.createUser({
       ...createUserDto,
       password: hash,
-      role: 'ADMIN', //Доробити логіку ролей
+      role: 'USER', //Доробити логіку ролей
     });
 
     const tokens = await this.getTokens(newUser.id, newUser.email);
@@ -38,24 +40,52 @@ export class AuthService {
 
   async signIn(authDto: AuthDto) {
     const user = await this.usersService.getCurrent(authDto.email);
+    if (!user) {
+      throw new BadRequestException('Password or email is incorrect');
+    }
 
     const isMatch = await bcrypt.compare(authDto.password, user.password);
-
     if (!isMatch) {
       throw new BadRequestException('Password or email is incorrect');
     }
-    const tokens = await this.getTokens(user.id, user.email);
-    await this.updateRefreshToken(user.id, tokens.refreshToken);
 
+    const tokens = await this.getTokens(user.id, user.email);
+
+    await this.updateRefreshToken(user.id, tokens.refreshToken);
     return {
       tokens,
       user: {
         name: user.name,
         email: user.email,
-        theme: user.theme,
-        local: user.local,
+        locale: user.locale,
         avatarURL: user.avatarURL,
-        avatarURLsmall: user.avatarURLsmall,
+      },
+    };
+  }
+
+  async signInAdmin(authDto: AuthDto) {
+    const admin = await this.adminsService.getCurrentAdmin(authDto.email);
+    if (!admin) {
+      throw new BadRequestException('Password or email is incorrect');
+    }
+
+    const isMatch = await bcrypt.compare(authDto.password, admin.password);
+    if (!isMatch) {
+      throw new BadRequestException('Password or email is incorrect');
+    }
+
+    const tokens = await this.getTokens(admin.id, admin.email);
+    await this.updateRefreshToken(admin.id, tokens.refreshToken);
+
+    return {
+      tokens,
+      admin: {
+        name: admin.name,
+        email: admin.email,
+        theme: admin.theme,
+        locale: admin.locale,
+        avatarURL: admin.avatarURL,
+        avatarURLsmall: admin.avatarURLsmall,
       },
     };
   }
@@ -70,14 +100,14 @@ export class AuthService {
 
   async getCurrentUser(email: string) {
     const user = await this.usersService.getCurrent(email);
+    if (!user) throw new HttpException('User not found', 404);
     return {
       id: user._id,
       name: user.name,
       email: user.email,
       theme: user.theme,
-      local: user.local,
+      locale: user.locale,
       avatarURL: user.avatarURL,
-      avatarURLsmall: user.avatarURLsmall,
     };
   }
 
@@ -99,7 +129,7 @@ export class AuthService {
         },
         {
           secret: process.env.JWT_SECRET_ACCESS,
-          expiresIn: '60m',
+          expiresIn: '5m',
         },
       ),
       this.jwtService.signAsync(

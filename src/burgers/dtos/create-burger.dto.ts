@@ -4,7 +4,10 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
+import { CreateLocaledBurgerDto } from './create-located-burger.dto';
 
 export class CreateBurgerDto {
   @IsNotEmpty()
@@ -16,52 +19,19 @@ export class CreateBurgerDto {
   archived: boolean;
 
   @IsNotEmpty()
-  @IsString()
-  title_en: string;
+  @ValidateNested()
+  @Type(() => CreateLocaledBurgerDto)
+  en: CreateLocaledBurgerDto;
 
   @IsNotEmpty()
-  @IsString()
-  title_de: string;
+  @ValidateNested()
+  @Type(() => CreateLocaledBurgerDto)
+  de: CreateLocaledBurgerDto;
 
   @IsNotEmpty()
-  @IsString()
-  title_ua: string;
-
-  @IsNotEmpty()
-  @IsNumber()
-  price_standart_en: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  price_double_en: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  price_standart_de: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  price_double_de: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  price_standart_ua: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  price_double_ua: number;
-
-  @IsNotEmpty()
-  @IsString()
-  ingredients_en: string;
-
-  @IsNotEmpty()
-  @IsString()
-  ingredients_de: string;
-
-  @IsNotEmpty()
-  @IsString()
-  ingredients_ua: string;
+  @ValidateNested()
+  @Type(() => CreateLocaledBurgerDto)
+  ua: CreateLocaledBurgerDto;
 
   @IsOptional()
   @IsString()
@@ -69,13 +39,5 @@ export class CreateBurgerDto {
 
   @IsOptional()
   @IsString()
-  img2xURL?: string;
-
-  @IsOptional()
-  @IsString()
   webpImgURL?: string;
-
-  @IsOptional()
-  @IsString()
-  webpImg2xURL?: string;
 }

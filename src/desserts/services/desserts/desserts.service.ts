@@ -15,7 +15,7 @@ export class DessertsService {
 
   async createDessert(owner: string, createDessertDto: CreateDessertDto) {
     const isMatch = await this.dessertModel.findOne({
-      title_en: createDessertDto.title_en,
+      en: { title: createDessertDto.en.title },
     });
     if (isMatch) {
       throw new HttpException('This product name already exists.', 409);
@@ -29,18 +29,7 @@ export class DessertsService {
       status: 'created',
       code: 201,
       message: 'Product created successfully',
-      dessert: {
-        _id: newDesserts._id,
-        index: newDesserts.index,
-        archived: newDesserts.archived,
-        title_en: newDesserts.title_en,
-        title_de: newDesserts.title_de,
-        title_ua: newDesserts.title_ua,
-        price_en: newDesserts.price_en,
-        price_de: newDesserts.price_de,
-        price_ua: newDesserts.price_ua,
-        weight: newDesserts.weight,
-      },
+      dessert: newDesserts,
     };
   }
 
@@ -65,6 +54,8 @@ export class DessertsService {
   }
 
   async getDessertById(id: string) {
+    console.log('GET Id', id);
+
     const result = await this.dessertModel.findById(id).exec();
     if (result === null) return false;
     else return result;
@@ -74,10 +65,28 @@ export class DessertsService {
     const isFinded = await this.getDessertById(id);
     if (!isFinded) throw new HttpException('Product not found.', 404);
     const updatedDessert = await this.dessertModel
-      .findByIdAndUpdate(id, updateDessertDto, {
-        new: true,
-        select: '-owner -createdAt -updatedAt',
-      })
+      .findByIdAndUpdate(
+        id,
+        {
+          index: updateDessertDto.index,
+          archived: updateDessertDto.archived,
+          weight: updateDessertDto.weight,
+          imgURL: updateDessertDto.imgURL,
+          webpImgURL: updateDessertDto.webpImgURL,
+          $set: {
+            'en.title': updateDessertDto?.en?.title,
+            'en.standart': updateDessertDto?.en?.standart,
+            'de.title': updateDessertDto?.de?.title,
+            'de.standart': updateDessertDto?.de?.standart,
+            'ua.title': updateDessertDto?.ua?.title,
+            'ua.standart': updateDessertDto?.ua?.standart,
+          },
+        },
+        {
+          new: true,
+          select: '-owner -createdAt -updatedAt',
+        },
+      )
       .exec();
 
     return {
@@ -90,19 +99,14 @@ export class DessertsService {
 
   async deleteDessert(id: string) {
     const isFinded = await this.getDessertById(id);
+
     if (!isFinded) throw new HttpException('Product not found.', 404);
-    const deletedDessert = await this.dessertModel.findByIdAndDelete({
-      _id: id,
-    });
-    await this.cloudinaryServices.destroyImage(`workkava/cafe/desserts/${id}`);
+    const deletedDessert = await this.dessertModel.findByIdAndDelete(id);
     await this.cloudinaryServices.destroyImage(
-      `workkava/cafe/desserts/${id}_2x`,
+      `workkava/cafe/desserts/jpeg/${id}`,
     );
     await this.cloudinaryServices.destroyImage(
-      `workkava/cafe/desserts-webp/${id}`,
-    );
-    await this.cloudinaryServices.destroyImage(
-      `workkava/cafe/desserts-webp/${id}_2x`,
+      `workkava/cafe/desserts/webp/${id}`,
     );
     return {
       status: 'success',

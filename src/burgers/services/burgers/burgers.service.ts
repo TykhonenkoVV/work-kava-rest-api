@@ -15,7 +15,7 @@ export class BurgersService {
 
   async createBurger(owner: string, createBurgerDto: CreateBurgerDto) {
     const isMatch = await this.burgerModel.findOne({
-      title_en: createBurgerDto.title_en,
+      en: { title: createBurgerDto.en.title },
     });
     if (isMatch) {
       throw new HttpException('This product name already exists.', 409);
@@ -29,29 +29,7 @@ export class BurgersService {
       status: 'created',
       code: 201,
       message: 'Product created successfully',
-      burger: {
-        _id: newBurger._id,
-        index: newBurger.index,
-        archived: newBurger.archived,
-        en: {
-          title: newBurger.en.title,
-          standart: newBurger.en.standart,
-          xl: newBurger.en.xl,
-          ingredients: newBurger.en.ingredients,
-        },
-        de: {
-          title: newBurger.de.title,
-          standart: newBurger.de.standart,
-          xl: newBurger.de.xl,
-          ingredients: newBurger.de.ingredients,
-        },
-        ua: {
-          title: newBurger.ua.title,
-          standart: newBurger.ua.standart,
-          xl: newBurger.ua.xl,
-          ingredients: newBurger.ua.ingredients,
-        },
-      },
+      burger: newBurger,
     };
   }
 
@@ -85,10 +63,33 @@ export class BurgersService {
     const isFinded = await this.getBurgerById(id);
     if (!isFinded) throw new HttpException('Product not found.', 404);
     const updatedBurger = await this.burgerModel
-      .findByIdAndUpdate(id, updateBurgerDto, {
-        new: true,
-        select: '-owner -createdAt -updatedAt',
-      })
+      .findByIdAndUpdate(
+        id,
+        {
+          index: updateBurgerDto.index,
+          archived: updateBurgerDto.archived,
+          imgURL: updateBurgerDto.imgURL,
+          webpImgURL: updateBurgerDto.webpImgURL,
+          $set: {
+            'en.title': updateBurgerDto?.en?.title,
+            'en.standart': updateBurgerDto?.en?.standart,
+            'en.xl': updateBurgerDto?.en?.xl,
+            'en.ingredients': updateBurgerDto?.en?.ingredients,
+            'de.title': updateBurgerDto?.de?.title,
+            'de.standart': updateBurgerDto?.de?.standart,
+            'de.xl': updateBurgerDto?.de?.xl,
+            'de.ingredients': updateBurgerDto?.de?.ingredients,
+            'ua.title': updateBurgerDto?.ua?.title,
+            'ua.standart': updateBurgerDto?.ua?.standart,
+            'ua.xl': updateBurgerDto?.ua?.xl,
+            'ua.ingredients': updateBurgerDto?.ua?.ingredients,
+          },
+        },
+        {
+          new: true,
+          select: '-owner -createdAt -updatedAt',
+        },
+      )
       .exec();
 
     return {
@@ -106,16 +107,10 @@ export class BurgersService {
       _id: id,
     });
     await this.cloudinaryServices.destroyImage(
-      `workkava/fastfood/burgers/${id}`,
+      `workkava/fastfood/burgers/png/${id}`,
     );
     await this.cloudinaryServices.destroyImage(
-      `workkava/fastfood/burgers/${id}_2x`,
-    );
-    await this.cloudinaryServices.destroyImage(
-      `workkava/fastfood/burgers-webp/${id}`,
-    );
-    await this.cloudinaryServices.destroyImage(
-      `workkava/fastfood/burgers-webp/${id}_2x`,
+      `workkava/fastfood/burgers/webp/${id}`,
     );
     return {
       status: 'success',

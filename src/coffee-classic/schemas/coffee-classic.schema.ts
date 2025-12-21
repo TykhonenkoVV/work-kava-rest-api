@@ -10,23 +10,14 @@ export class CoffeeClassic {
   @Prop({ required: true })
   archived: boolean;
 
-  @Prop({ required: true })
-  title_en: string;
+  @Prop({ type: mongoose.Schema.Types.Mixed })
+  en: { title: string; standart: number };
 
-  @Prop({ required: true })
-  title_de: string;
+  @Prop({ type: mongoose.Schema.Types.Mixed })
+  de: { title: string; standart: number };
 
-  @Prop({ required: true })
-  title_ua: string;
-
-  @Prop({ required: true })
-  price_en: number;
-
-  @Prop({ required: true })
-  price_de: number;
-
-  @Prop({ required: true })
-  price_ua: number;
+  @Prop({ type: mongoose.Schema.Types.Mixed })
+  ua: { title: string; standart: number };
 
   @Prop({ required: true })
   coffee: number;
@@ -38,13 +29,7 @@ export class CoffeeClassic {
   imgURL: string;
 
   @Prop()
-  img2xURL: string;
-
-  @Prop()
   webpImgURL: string;
-
-  @Prop()
-  webpImg2xURL: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Owner' })
   owner: User;

@@ -78,6 +78,7 @@ export class CoffeeWithMilkController {
 
   @UseGuards(AccessTokenGuard)
   @Delete(':id')
+  @UsePipes(new ValidationPipe({ transform: true }))
   deleteCoffeeWithMilk(@Param('id') id: string) {
     const isValidId = mongoose.Types.ObjectId.isValid(id);
     if (!isValidId) throw new HttpException('Invalid id.', 404);
@@ -108,19 +109,11 @@ export class CoffeeWithMilkController {
       const img = await this.cloudinaryServices.uploadImage(
         id,
         files?.img[0]?.path,
-        'workkava/cafe/coffee-with-milk',
-        470,
-        260,
-      );
-      const img2x = await this.cloudinaryServices.uploadImage(
-        `${id}_2x`,
-        files?.img[0]?.path,
-        'workkava/cafe/coffee-with-milk',
+        'workkava/cafe/coffee-with-milk/png',
         null,
         null,
       );
-      payload.imgURL = img.secure_url;
-      payload.img2xURL = img2x.secure_url;
+      payload.imgURL = `v${img.version}/${img.public_id}`;
 
       fs.unlink(files?.img[0]?.path, (err) => {
         if (err) {
@@ -133,19 +126,11 @@ export class CoffeeWithMilkController {
       const webpImg = await this.cloudinaryServices.uploadImage(
         id,
         files?.webpImg[0]?.path,
-        'workkava/cafe/coffee-with-milk-webp',
-        470,
-        260,
-      );
-      const webpImg2x = await this.cloudinaryServices.uploadImage(
-        `${id}_2x`,
-        files?.webpImg[0]?.path,
-        'workkava/cafe/coffee-with-milk-webp',
+        'workkava/cafe/coffee-with-milk/webp',
         null,
         null,
       );
-      payload.webpImgURL = webpImg.secure_url;
-      payload.webpImg2xURL = webpImg2x.secure_url;
+      payload.webpImgURL = `v${webpImg.version}/${webpImg.public_id}`;
 
       fs.unlink(files?.webpImg[0]?.path, (err) => {
         if (err) {

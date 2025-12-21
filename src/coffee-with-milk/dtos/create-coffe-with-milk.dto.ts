@@ -1,12 +1,13 @@
 import { Type } from 'class-transformer';
 import {
-  IsArray,
   IsBoolean,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
+  ValidateNested,
 } from 'class-validator';
+import { CreateLocaledCoffeeWithMilkDto } from './create-localed-coffee-with-milk.dto';
 
 export class CreateCoffeeWithMilkDto {
   @IsNotEmpty()
@@ -18,28 +19,19 @@ export class CreateCoffeeWithMilkDto {
   archived: boolean;
 
   @IsNotEmpty()
-  @IsString()
-  title_en: string;
+  @ValidateNested()
+  @Type(() => CreateLocaledCoffeeWithMilkDto)
+  en: CreateLocaledCoffeeWithMilkDto;
 
   @IsNotEmpty()
-  @IsString()
-  title_de: string;
+  @ValidateNested()
+  @Type(() => CreateLocaledCoffeeWithMilkDto)
+  de: CreateLocaledCoffeeWithMilkDto;
 
   @IsNotEmpty()
-  @IsString()
-  title_ua: string;
-
-  @IsNotEmpty()
-  @IsNumber()
-  price_en: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  price_de: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  price_ua: number;
+  @ValidateNested()
+  @Type(() => CreateLocaledCoffeeWithMilkDto)
+  ua: CreateLocaledCoffeeWithMilkDto;
 
   @IsNotEmpty()
   @IsNumber()
@@ -59,13 +51,5 @@ export class CreateCoffeeWithMilkDto {
 
   @IsOptional()
   @IsString()
-  img2xURL?: string;
-
-  @IsOptional()
-  @IsString()
   webpImgURL?: string;
-
-  @IsOptional()
-  @IsString()
-  webpImg2xURL?: string;
 }

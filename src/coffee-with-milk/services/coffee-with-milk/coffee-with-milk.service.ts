@@ -19,7 +19,7 @@ export class CoffeeWithMilkService {
     createCoffeeWithMilkDto: CreateCoffeeWithMilkDto,
   ) {
     const isMatch = await this.coffeeWithMilkModel.findOne({
-      title_en: createCoffeeWithMilkDto.title_en,
+      en: { title: createCoffeeWithMilkDto.en.title },
     });
     if (isMatch) {
       throw new HttpException('This product name already exists.', 409);
@@ -33,20 +33,7 @@ export class CoffeeWithMilkService {
       status: 'created',
       code: 201,
       message: 'Product created successfully',
-      coffee_with_milk: {
-        _id: newCoffeeWithMilk._id,
-        index: newCoffeeWithMilk.index,
-        archived: newCoffeeWithMilk.archived,
-        title_en: newCoffeeWithMilk.title_en,
-        title_de: newCoffeeWithMilk.title_de,
-        title_ua: newCoffeeWithMilk.title_ua,
-        price_en: newCoffeeWithMilk.price_en,
-        price_de: newCoffeeWithMilk.price_de,
-        price_ua: newCoffeeWithMilk.price_ua,
-        coffee: newCoffeeWithMilk.coffee,
-        water: newCoffeeWithMilk.water,
-        milk: newCoffeeWithMilk.milk,
-      },
+      coffee_with_milk: newCoffeeWithMilk,
     };
   }
 
@@ -61,9 +48,12 @@ export class CoffeeWithMilkService {
   }
 
   async getCoffeeWithMilk() {
-    const coffeeWithMilkArr = await this.coffeeWithMilkModel.find({
-      archived: false,
-    });
+    const coffeeWithMilkArr = await this.coffeeWithMilkModel.find(
+      {
+        archived: false,
+      },
+      { select: '-createdAt -updatedAt' },
+    );
     return {
       status: 'success',
       code: 200,
@@ -85,10 +75,30 @@ export class CoffeeWithMilkService {
     const isFinded = await this.getCoffeeWithMilkById(id);
     if (!isFinded) throw new HttpException('Product not found.', 404);
     const updatedCoffeeWithMilk = await this.coffeeWithMilkModel
-      .findByIdAndUpdate(id, updateCoffeeWithMilkDto, {
-        new: true,
-        select: '-owner -createdAt -updatedAt',
-      })
+      .findByIdAndUpdate(
+        id,
+        {
+          index: updateCoffeeWithMilkDto.index,
+          archived: updateCoffeeWithMilkDto.archived,
+          coffee: updateCoffeeWithMilkDto.coffee,
+          water: updateCoffeeWithMilkDto.water,
+          milk: updateCoffeeWithMilkDto.milk,
+          imgURL: updateCoffeeWithMilkDto.imgURL,
+          webpImgURL: updateCoffeeWithMilkDto.webpImgURL,
+          $set: {
+            'en.title': updateCoffeeWithMilkDto?.en?.title,
+            'en.standart': updateCoffeeWithMilkDto?.en?.standart,
+            'de.title': updateCoffeeWithMilkDto?.de?.title,
+            'de.standart': updateCoffeeWithMilkDto?.de?.standart,
+            'ua.title': updateCoffeeWithMilkDto?.ua?.title,
+            'ua.standart': updateCoffeeWithMilkDto?.ua?.standart,
+          },
+        },
+        {
+          new: true,
+          select: '-owner -createdAt -updatedAt',
+        },
+      )
       .exec();
 
     return {
@@ -107,16 +117,10 @@ export class CoffeeWithMilkService {
         _id: id,
       });
     await this.cloudinaryServices.destroyImage(
-      `workkava/cafe/coffee-with-milk/${id}`,
+      `workkava/cafe/coffee-with-milk/png/${id}`,
     );
     await this.cloudinaryServices.destroyImage(
-      `workkava/cafe/coffee-with-milk/${id}_2x`,
-    );
-    await this.cloudinaryServices.destroyImage(
-      `workkava/cafe/coffee-with-milk-webp/${id}`,
-    );
-    await this.cloudinaryServices.destroyImage(
-      `workkava/cafe/coffee-with-milk-webp/${id}_2x`,
+      `workkava/cafe/coffee-with-milk/webp/${id}`,
     );
     return {
       status: 'success',

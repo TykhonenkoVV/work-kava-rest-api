@@ -1,4 +1,12 @@
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { UpdateLocaledCoffeeClassicDto } from './update-localed-coffee-classic.dto';
 
 export class UpdateCoffeeClassicDto {
   @IsOptional()
@@ -10,28 +18,19 @@ export class UpdateCoffeeClassicDto {
   archived?: boolean;
 
   @IsOptional()
-  @IsString()
-  title_en?: string;
+  @ValidateNested()
+  @Type(() => UpdateLocaledCoffeeClassicDto)
+  en?: UpdateLocaledCoffeeClassicDto;
 
   @IsOptional()
-  @IsString()
-  title_de?: string;
+  @ValidateNested()
+  @Type(() => UpdateLocaledCoffeeClassicDto)
+  de?: UpdateLocaledCoffeeClassicDto;
 
   @IsOptional()
-  @IsString()
-  title_ua?: string;
-
-  @IsOptional()
-  @IsNumber()
-  price_en?: number;
-
-  @IsOptional()
-  @IsNumber()
-  price_de?: number;
-
-  @IsOptional()
-  @IsNumber()
-  price_ua?: number;
+  @ValidateNested()
+  @Type(() => UpdateLocaledCoffeeClassicDto)
+  ua?: UpdateLocaledCoffeeClassicDto;
 
   @IsOptional()
   @IsNumber()
@@ -47,13 +46,5 @@ export class UpdateCoffeeClassicDto {
 
   @IsOptional()
   @IsString()
-  img2xURL?: string;
-
-  @IsOptional()
-  @IsString()
   webpImgURL?: string;
-
-  @IsOptional()
-  @IsString()
-  webpImg2xURL?: string;
 }

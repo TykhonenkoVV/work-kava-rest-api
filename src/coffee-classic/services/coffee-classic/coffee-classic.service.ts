@@ -19,7 +19,7 @@ export class CoffeeClassicService {
     createCoffeeClassicDto: CreateCoffeeClassicDto,
   ) {
     const isMatch = await this.coffeeClassicModel.findOne({
-      title_en: createCoffeeClassicDto.title_en,
+      en: { title: createCoffeeClassicDto.en.title },
     });
     if (isMatch) {
       throw new HttpException('This product name already exists.', 409);
@@ -33,19 +33,7 @@ export class CoffeeClassicService {
       status: 'created',
       code: 201,
       message: 'Product created successfully',
-      coffee_classic: {
-        _id: newCoffeeClassic._id,
-        index: newCoffeeClassic.index,
-        archived: newCoffeeClassic.archived,
-        price_en: newCoffeeClassic.price_en,
-        price_de: newCoffeeClassic.price_de,
-        price_ua: newCoffeeClassic.price_ua,
-        title_en: newCoffeeClassic.title_en,
-        title_de: newCoffeeClassic.title_de,
-        title_ua: newCoffeeClassic.title_ua,
-        coffee: newCoffeeClassic.coffee,
-        water: newCoffeeClassic.water,
-      },
+      coffee_classic: newCoffeeClassic,
     };
   }
 
@@ -84,10 +72,29 @@ export class CoffeeClassicService {
     const isFinded = await this.getCoffeeClassicById(id);
     if (!isFinded) throw new HttpException('Product not found.', 404);
     const updatedCoffeeClassic = await this.coffeeClassicModel
-      .findByIdAndUpdate(id, updateCoffeeClassicDto, {
-        new: true,
-        select: '-owner -createdAt -updatedAt',
-      })
+      .findByIdAndUpdate(
+        id,
+        {
+          index: updateCoffeeClassicDto.index,
+          archived: updateCoffeeClassicDto.archived,
+          coffee: updateCoffeeClassicDto.coffee,
+          water: updateCoffeeClassicDto.water,
+          imgURL: updateCoffeeClassicDto.imgURL,
+          webpImgURL: updateCoffeeClassicDto.webpImgURL,
+          $set: {
+            'en.title': updateCoffeeClassicDto?.en?.title,
+            'en.standart': updateCoffeeClassicDto?.en?.standart,
+            'de.title': updateCoffeeClassicDto?.de?.title,
+            'de.standart': updateCoffeeClassicDto?.de?.standart,
+            'ua.title': updateCoffeeClassicDto?.ua?.title,
+            'ua.standart': updateCoffeeClassicDto?.ua?.standart,
+          },
+        },
+        {
+          new: true,
+          select: '-owner -createdAt -updatedAt',
+        },
+      )
       .exec();
 
     return {
@@ -106,16 +113,10 @@ export class CoffeeClassicService {
         _id: id,
       });
     await this.cloudinaryServices.destroyImage(
-      `workkava/cafe/coffee-classic/${id}`,
+      `workkava/cafe/coffee-classic/png/${id}`,
     );
     await this.cloudinaryServices.destroyImage(
-      `workkava/cafe/coffee-classic/${id}_2x`,
-    );
-    await this.cloudinaryServices.destroyImage(
-      `workkava/cafe/coffee-classic-webp/${id}`,
-    );
-    await this.cloudinaryServices.destroyImage(
-      `workkava/cafe/coffee-classic-webp/${id}_2x`,
+      `workkava/cafe/coffee-classic/webp/${id}`,
     );
     return {
       status: 'success',

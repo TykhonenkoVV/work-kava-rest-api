@@ -53,7 +53,11 @@ export class DessertsController {
   }
 
   @Get(':id')
+  @UsePipes(new ValidationPipe())
   getDessertById(@Param('id') id: string) {
+    const isValidId = mongoose.Types.ObjectId.isValid(id);
+    console.log('GET IsValidId', isValidId);
+    if (!isValidId) throw new HttpException('Invalid id.', 404);
     return this.dessertsServices.getDessertById(id);
   }
 
@@ -71,7 +75,8 @@ export class DessertsController {
 
   @UseGuards(AccessTokenGuard)
   @Delete(':id')
-  deleteDessert(@Param() id: string) {
+  @UsePipes(new ValidationPipe())
+  deleteDessert(@Param('id') id: string) {
     const isValidId = mongoose.Types.ObjectId.isValid(id);
     if (!isValidId) throw new HttpException('Invalid id.', 404);
     return this.dessertsServices.deleteDessert(id);
@@ -101,19 +106,11 @@ export class DessertsController {
       const img = await this.cloudinaryServices.uploadImage(
         id,
         files?.img[0]?.path,
-        'workkava/cafe/desserts',
-        470,
-        260,
-      );
-      const img2x = await this.cloudinaryServices.uploadImage(
-        `${id}_2x`,
-        files?.img[0]?.path,
-        'workkava/cafe/desserts',
+        'workkava/cafe/desserts/jpeg',
         null,
         null,
       );
-      payload.imgURL = img.secure_url;
-      payload.img2xURL = img2x.secure_url;
+      payload.imgURL = `v${img.version}/${img.public_id}`;
 
       fs.unlink(files?.img[0]?.path, (err) => {
         if (err) {
@@ -126,19 +123,11 @@ export class DessertsController {
       const webpImg = await this.cloudinaryServices.uploadImage(
         id,
         files?.webpImg[0]?.path,
-        'workkava/cafe/desserts-webp',
-        470,
-        260,
-      );
-      const webpImg2x = await this.cloudinaryServices.uploadImage(
-        `${id}_2x`,
-        files?.webpImg[0]?.path,
-        'workkava/cafe/desserts-webp',
+        'workkava/cafe/desserts/webp',
         null,
         null,
       );
-      payload.webpImgURL = webpImg.secure_url;
-      payload.webpImg2xURL = webpImg2x.secure_url;
+      payload.webpImgURL = `v${webpImg.version}/${webpImg.public_id}`;
 
       fs.unlink(files?.webpImg[0]?.path, (err) => {
         if (err) {

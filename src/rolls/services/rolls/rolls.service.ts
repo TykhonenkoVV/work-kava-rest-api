@@ -15,7 +15,7 @@ export class RollsService {
 
   async createRoll(owner: string, createRollDto: CreateRollDto) {
     const isMatch = await this.rollModel.findOne({
-      title_en: createRollDto.title_en,
+      en: { title: createRollDto.en.title },
     });
     if (isMatch) {
       throw new HttpException('This product name already exists.', 409);
@@ -29,23 +29,7 @@ export class RollsService {
       status: 'created',
       code: 201,
       message: 'Product created successfully',
-      roll: {
-        _id: newRoll._id,
-        index: newRoll.index,
-        archived: newRoll.archived,
-        title_en: newRoll.title_en,
-        title_de: newRoll.title_de,
-        title_ua: newRoll.title_ua,
-        price_standart_en: newRoll.price_standart_en,
-        price_xl_en: newRoll.price_xl_en,
-        price_standart_de: newRoll.price_standart_de,
-        price_xl_de: newRoll.price_xl_de,
-        price_standart_ua: newRoll.price_standart_ua,
-        price_xl_ua: newRoll.price_xl_ua,
-        ingredients_en: newRoll.ingredients_en,
-        ingredients_de: newRoll.ingredients_de,
-        ingredients_ua: newRoll.ingredients_ua,
-      },
+      roll: newRoll,
     };
   }
 
@@ -79,10 +63,33 @@ export class RollsService {
     const isFinded = await this.getRollById(id);
     if (!isFinded) throw new HttpException('Product not found.', 404);
     const updatedRoll = await this.rollModel
-      .findByIdAndUpdate(id, updateRollDto, {
-        new: true,
-        select: '-owner -createdAt -updatedAt',
-      })
+      .findByIdAndUpdate(
+        id,
+        {
+          index: updateRollDto.index,
+          archived: updateRollDto.archived,
+          imgURL: updateRollDto.imgURL,
+          webpImgURL: updateRollDto.webpImgURL,
+          $set: {
+            'en.title': updateRollDto?.en?.title,
+            'en.standart': updateRollDto?.en?.standart,
+            'en.xl': updateRollDto?.en?.xl,
+            'en.ingredients': updateRollDto?.en?.ingredients,
+            'de.title': updateRollDto?.de?.title,
+            'de.standart': updateRollDto?.de?.standart,
+            'de.xl': updateRollDto?.de?.xl,
+            'de.ingredients': updateRollDto?.de?.ingredients,
+            'ua.title': updateRollDto?.ua?.title,
+            'ua.standart': updateRollDto?.ua?.standart,
+            'ua.xl': updateRollDto?.ua?.xl,
+            'ua.ingredients': updateRollDto?.ua?.ingredients,
+          },
+        },
+        {
+          new: true,
+          select: '-owner -createdAt -updatedAt',
+        },
+      )
       .exec();
 
     return {
@@ -97,15 +104,11 @@ export class RollsService {
     const isFinded = await this.getRollById(id);
     if (!isFinded) throw new HttpException('Product not found.', 404);
     const deletedRoll = await this.rollModel.findByIdAndDelete({ _id: id });
-    await this.cloudinaryServices.destroyImage(`workkava/fastfood/rolls/${id}`);
     await this.cloudinaryServices.destroyImage(
-      `workkava/fastfood/rolls/${id}_2x`,
+      `workkava/fastfood/rolls/png/${id}`,
     );
     await this.cloudinaryServices.destroyImage(
-      `workkava/fastfood/rolls-webp/${id}`,
-    );
-    await this.cloudinaryServices.destroyImage(
-      `workkava/fastfood/rolls-webp/${id}_2x`,
+      `workkava/fastfood/rolls/webp/${id}`,
     );
     return {
       status: 'success',

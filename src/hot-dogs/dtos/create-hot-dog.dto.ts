@@ -4,7 +4,10 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  ValidateNested,
 } from 'class-validator';
+import { CreateLocaledHotDogDto } from './create-located-hot-dog.dto';
+import { Type } from 'class-transformer';
 
 export class CreateHotDogDto {
   @IsNotEmpty()
@@ -16,52 +19,19 @@ export class CreateHotDogDto {
   archived: boolean;
 
   @IsNotEmpty()
-  @IsString()
-  title_en: string;
+  @ValidateNested()
+  @Type(() => CreateLocaledHotDogDto)
+  en: CreateLocaledHotDogDto;
 
   @IsNotEmpty()
-  @IsString()
-  title_de: string;
+  @ValidateNested()
+  @Type(() => CreateLocaledHotDogDto)
+  de: CreateLocaledHotDogDto;
 
   @IsNotEmpty()
-  @IsString()
-  title_ua: string;
-
-  @IsNotEmpty()
-  @IsNumber()
-  price_standart_en: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  price_double_en: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  price_standart_de: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  price_double_de: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  price_standart_ua: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  price_double_ua: number;
-
-  @IsNotEmpty()
-  @IsString()
-  ingredients_en: string;
-
-  @IsNotEmpty()
-  @IsString()
-  ingredients_de: string;
-
-  @IsNotEmpty()
-  @IsString()
-  ingredients_ua: string;
+  @ValidateNested()
+  @Type(() => CreateLocaledHotDogDto)
+  ua: CreateLocaledHotDogDto;
 
   @IsOptional()
   @IsString()
@@ -69,13 +39,5 @@ export class CreateHotDogDto {
 
   @IsOptional()
   @IsString()
-  img2xURL?: string;
-
-  @IsOptional()
-  @IsString()
   webpImgURL?: string;
-
-  @IsOptional()
-  @IsString()
-  webpImg2xURL?: string;
 }

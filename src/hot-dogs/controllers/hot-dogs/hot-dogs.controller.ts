@@ -100,18 +100,10 @@ export class HotDogsController {
         id,
         files?.img[0]?.path,
         'workkava/fastfood/hot-dogs',
-        470,
-        260,
-      );
-      const img2x = await this.cloudinaryServices.uploadImage(
-        `${id}_2x`,
-        files?.img[0]?.path,
-        'workkava/fastfood/hot-dogs',
         null,
         null,
       );
-      payload.imgURL = img.secure_url;
-      payload.img2xURL = img2x.secure_url;
+      payload.imgURL = `v${img.version}/${img.public_id}`;
 
       fs.unlink(files?.img[0]?.path, (err) => {
         if (err) {
@@ -125,18 +117,10 @@ export class HotDogsController {
         id,
         files?.webpImg[0]?.path,
         'workkava/fastfood/hot-dogs-webp',
-        470,
-        260,
-      );
-      const webpImg2x = await this.cloudinaryServices.uploadImage(
-        `${id}_2x`,
-        files?.webpImg[0]?.path,
-        'workkava/fastfood/hot-dogs-webp',
         null,
         null,
       );
-      payload.webpImgURL = webpImg.secure_url;
-      payload.webpImg2xURL = webpImg2x.secure_url;
+      payload.webpImgURL = `v${webpImg.version}/${webpImg.public_id}`;
 
       fs.unlink(files?.webpImg[0]?.path, (err) => {
         if (err) {

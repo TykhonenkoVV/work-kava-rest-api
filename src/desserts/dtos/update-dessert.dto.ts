@@ -1,4 +1,12 @@
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { UpdateLocaledDessertDto } from './update-localed-dessert.dto';
+import { Type } from 'class-transformer';
 
 export class UpdateDessertDto {
   @IsOptional()
@@ -10,28 +18,19 @@ export class UpdateDessertDto {
   archived?: boolean;
 
   @IsOptional()
-  @IsString()
-  title_en?: string;
+  @ValidateNested()
+  @Type(() => UpdateLocaledDessertDto)
+  en?: UpdateLocaledDessertDto;
 
   @IsOptional()
-  @IsString()
-  title_de?: string;
+  @ValidateNested()
+  @Type(() => UpdateLocaledDessertDto)
+  de?: UpdateLocaledDessertDto;
 
   @IsOptional()
-  @IsString()
-  title_ua?: string;
-
-  @IsOptional()
-  @IsNumber()
-  price_en?: number;
-
-  @IsOptional()
-  @IsNumber()
-  price_de?: number;
-
-  @IsOptional()
-  @IsNumber()
-  price_ua?: number;
+  @ValidateNested()
+  @Type(() => UpdateLocaledDessertDto)
+  ua?: UpdateLocaledDessertDto;
 
   @IsOptional()
   @IsNumber()
@@ -43,13 +42,5 @@ export class UpdateDessertDto {
 
   @IsOptional()
   @IsString()
-  img2xURL?: string;
-
-  @IsOptional()
-  @IsString()
   webpImgURL?: string;
-
-  @IsOptional()
-  @IsString()
-  webpImg2xURL?: string;
 }

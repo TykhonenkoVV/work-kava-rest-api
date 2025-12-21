@@ -4,7 +4,10 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  ValidateNested,
 } from 'class-validator';
+import { CreateLocaledDessertDto } from './create-localed-dessert.dto';
+import { Type } from 'class-transformer';
 
 export class CreateDessertDto {
   @IsNotEmpty()
@@ -16,28 +19,19 @@ export class CreateDessertDto {
   archived: boolean;
 
   @IsNotEmpty()
-  @IsString()
-  title_en: string;
+  @ValidateNested()
+  @Type(() => CreateLocaledDessertDto)
+  en: CreateLocaledDessertDto;
 
   @IsNotEmpty()
-  @IsString()
-  title_de: string;
+  @ValidateNested()
+  @Type(() => CreateLocaledDessertDto)
+  de: CreateLocaledDessertDto;
 
   @IsNotEmpty()
-  @IsString()
-  title_ua: string;
-
-  @IsNotEmpty()
-  @IsNumber()
-  price_en: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  price_de: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  price_ua: number;
+  @ValidateNested()
+  @Type(() => CreateLocaledDessertDto)
+  ua: CreateLocaledDessertDto;
 
   @IsNotEmpty()
   @IsNumber()
@@ -49,13 +43,5 @@ export class CreateDessertDto {
 
   @IsOptional()
   @IsString()
-  img2xURL?: string;
-
-  @IsOptional()
-  @IsString()
   webpImgURL?: string;
-
-  @IsOptional()
-  @IsString()
-  webpImg2xURL?: string;
 }

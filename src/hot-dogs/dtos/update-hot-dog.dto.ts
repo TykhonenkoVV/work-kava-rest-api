@@ -1,4 +1,12 @@
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { UpdateLocaledHotDogDto } from './update-located-hot-dog.dto';
+import { Type } from 'class-transformer';
 
 export class UpdateHotDogDto {
   @IsOptional()
@@ -10,52 +18,19 @@ export class UpdateHotDogDto {
   archived?: boolean;
 
   @IsOptional()
-  @IsString()
-  title_en?: string;
+  @ValidateNested()
+  @Type(() => UpdateLocaledHotDogDto)
+  en?: UpdateLocaledHotDogDto;
 
   @IsOptional()
-  @IsString()
-  title_de?: string;
+  @ValidateNested()
+  @Type(() => UpdateLocaledHotDogDto)
+  de?: UpdateLocaledHotDogDto;
 
   @IsOptional()
-  @IsString()
-  title_ua?: string;
-
-  @IsOptional()
-  @IsNumber()
-  price_standart_en?: number;
-
-  @IsOptional()
-  @IsNumber()
-  price_double_en?: number;
-
-  @IsOptional()
-  @IsNumber()
-  price_standart_de?: number;
-
-  @IsOptional()
-  @IsNumber()
-  price_double_de?: number;
-
-  @IsOptional()
-  @IsNumber()
-  price_standart_ua?: number;
-
-  @IsOptional()
-  @IsNumber()
-  price_double_ua?: number;
-
-  @IsOptional()
-  @IsString()
-  ingredients_en?: string;
-
-  @IsOptional()
-  @IsString()
-  ingredients_de?: string;
-
-  @IsOptional()
-  @IsString()
-  ingredients_ua?: string;
+  @ValidateNested()
+  @Type(() => UpdateLocaledHotDogDto)
+  ua?: UpdateLocaledHotDogDto;
 
   @IsOptional()
   @IsString()
@@ -63,13 +38,5 @@ export class UpdateHotDogDto {
 
   @IsOptional()
   @IsString()
-  img2xURL?: string;
-
-  @IsOptional()
-  @IsString()
   webpImgURL?: string;
-
-  @IsOptional()
-  @IsString()
-  webpImg2xURL?: string;
 }

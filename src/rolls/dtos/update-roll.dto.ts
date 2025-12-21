@@ -1,4 +1,12 @@
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { UpdateLocaledRollDto } from './update-located-roll.dto';
+import { Type } from 'class-transformer';
 
 export class UpdateRollDto {
   @IsOptional()
@@ -10,52 +18,19 @@ export class UpdateRollDto {
   archived?: boolean;
 
   @IsOptional()
-  @IsString()
-  title_en?: string;
+  @ValidateNested()
+  @Type(() => UpdateLocaledRollDto)
+  en?: UpdateLocaledRollDto;
 
   @IsOptional()
-  @IsString()
-  title_de?: string;
+  @ValidateNested()
+  @Type(() => UpdateLocaledRollDto)
+  de?: UpdateLocaledRollDto;
 
   @IsOptional()
-  @IsString()
-  title_ua?: string;
-
-  @IsOptional()
-  @IsNumber()
-  price_standart_en?: number;
-
-  @IsOptional()
-  @IsNumber()
-  price_xl_en?: number;
-
-  @IsOptional()
-  @IsNumber()
-  price_standart_de?: number;
-
-  @IsOptional()
-  @IsNumber()
-  price_xl_de?: number;
-
-  @IsOptional()
-  @IsNumber()
-  price_standart_ua?: number;
-
-  @IsOptional()
-  @IsNumber()
-  price_xl_ua?: number;
-
-  @IsOptional()
-  @IsString()
-  ingredients_en?: string;
-
-  @IsOptional()
-  @IsString()
-  ingredients_de?: string;
-
-  @IsOptional()
-  @IsString()
-  ingredients_ua?: string;
+  @ValidateNested()
+  @Type(() => UpdateLocaledRollDto)
+  ua?: UpdateLocaledRollDto;
 
   @IsOptional()
   @IsString()
@@ -63,13 +38,5 @@ export class UpdateRollDto {
 
   @IsOptional()
   @IsString()
-  img2xURL?: string;
-
-  @IsOptional()
-  @IsString()
   webpImgURL?: string;
-
-  @IsOptional()
-  @IsString()
-  webpImg2xURL?: string;
 }

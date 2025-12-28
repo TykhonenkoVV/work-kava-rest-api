@@ -44,7 +44,9 @@ export class RollsService {
   }
 
   async getRolls() {
-    const rollsArr = await this.rollModel.find({ archived: false });
+    const rollsArr = await this.rollModel.find({ archived: false }, null, {
+      select: '-owner -createdAt -updatedAt',
+    });
     return {
       status: 'success',
       code: 200,
@@ -54,7 +56,9 @@ export class RollsService {
   }
 
   async getRollById(id: string) {
-    const result = await this.rollModel.findById(id).exec();
+    const result = await this.rollModel
+      .findById(id, null, { select: '-owner -createdAt -updatedAt' })
+      .exec();
     if (result === null) return false;
     else return result;
   }

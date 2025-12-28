@@ -1,6 +1,17 @@
-import { IsNumber, IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  ValidateNested,
+} from 'class-validator';
+import { PriceDto } from './price.dto';
 
 export class UpdateProductInCartDto {
+  @IsOptional()
+  @IsBoolean()
+  archived?: boolean;
+
   @IsOptional()
   @IsNumber()
   standart?: number;
@@ -8,4 +19,9 @@ export class UpdateProductInCartDto {
   @IsOptional()
   @IsNumber()
   xl?: number;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => PriceDto)
+  price?: PriceDto;
 }

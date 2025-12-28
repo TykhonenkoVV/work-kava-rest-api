@@ -48,9 +48,13 @@ export class CoffeeClassicService {
   }
 
   async getCoffeeClassic() {
-    const coffeeClassicArr = await this.coffeeClassicModel.find({
-      archived: false,
-    });
+    const coffeeClassicArr = await this.coffeeClassicModel.find(
+      {
+        archived: false,
+      },
+      null,
+      { select: '-owner -createdAt -updatedAt' },
+    );
     return {
       status: 'success',
       code: 200,
@@ -60,7 +64,9 @@ export class CoffeeClassicService {
   }
 
   async getCoffeeClassicById(id: string) {
-    const result = await this.coffeeClassicModel.findById(id).exec();
+    const result = await this.coffeeClassicModel
+      .findById(id, null, { select: '-owner -createdAt -updatedAt' })
+      .exec();
     if (result === null) return false;
     else return result;
   }

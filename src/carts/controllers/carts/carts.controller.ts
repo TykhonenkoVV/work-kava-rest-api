@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   Param,
@@ -15,7 +16,7 @@ import { Request } from 'express';
 import mongoose from 'mongoose';
 import { AddProductToCartDto } from 'src/carts/dtos/add-product-to-cart.dto';
 import { UpdateProductInCartDto } from 'src/carts/dtos/update-product-in-cart.dto';
-import { CartsService } from 'src/carts/servoces/carts/carts.service';
+import { CartsService } from 'src/carts/services/carts/carts.service';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 
 @Controller('api/carts')
@@ -51,5 +52,14 @@ export class CartsController {
     const isValidId = mongoose.Types.ObjectId.isValid(id);
     if (!isValidId) throw new HttpException('Invalid id.', 404);
     return this.cartServices.updateProductInCart(id, updateProductInCartDto);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Delete(':id')
+  @UsePipes(new ValidationPipe())
+  deleteProductInCart(@Param('id') id: string) {
+    const isValidId = mongoose.Types.ObjectId.isValid(id);
+    if (!isValidId) throw new HttpException('Invalid id.', 404);
+    return this.cartServices.deleteProductInCart(id);
   }
 }

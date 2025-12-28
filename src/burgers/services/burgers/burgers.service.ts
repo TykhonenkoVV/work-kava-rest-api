@@ -44,7 +44,9 @@ export class BurgersService {
   }
 
   async getBurgers() {
-    const burgersArr = await this.burgerModel.find({ archived: false });
+    const burgersArr = await this.burgerModel.find({ archived: false }, null, {
+      select: '-owner -createdAt -updatedAt',
+    });
     return {
       status: 'success',
       code: 200,
@@ -54,7 +56,9 @@ export class BurgersService {
   }
 
   async getBurgerById(id: string) {
-    const result = await this.burgerModel.findById(id).exec();
+    const result = await this.burgerModel
+      .findById(id, null, { select: '-owner -createdAt -updatedAt' })
+      .exec();
     if (result === null) return false;
     else return result;
   }

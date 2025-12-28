@@ -44,7 +44,11 @@ export class DessertsService {
   }
 
   async getDesserts() {
-    const dessertsArr = await this.dessertModel.find({ archived: false });
+    const dessertsArr = await this.dessertModel.find(
+      { archived: false },
+      null,
+      { select: '-owner -createdAt -updatedAt' },
+    );
     return {
       status: 'success',
       code: 200,
@@ -54,9 +58,9 @@ export class DessertsService {
   }
 
   async getDessertById(id: string) {
-    console.log('GET Id', id);
-
-    const result = await this.dessertModel.findById(id).exec();
+    const result = await this.dessertModel
+      .findById(id, null, { select: '-owner -createdAt -updatedAt' })
+      .exec();
     if (result === null) return false;
     else return result;
   }

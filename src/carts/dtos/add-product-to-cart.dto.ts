@@ -1,9 +1,19 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class AddProductToCartDto {
   @IsNotEmpty()
   @IsString()
   productId: string;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  archived: boolean;
 
   @IsOptional()
   @IsNumber()

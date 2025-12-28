@@ -44,7 +44,9 @@ export class HotDogsService {
   }
 
   async getHotDogs() {
-    const hotDogsArr = await this.hoDogModel.find({ archived: false });
+    const hotDogsArr = await this.hoDogModel.find({ archived: false }, null, {
+      select: '-owner -createdAt -updatedAt',
+    });
     return {
       status: 'success',
       code: 200,
@@ -54,7 +56,9 @@ export class HotDogsService {
   }
 
   async getHotDogById(id: string) {
-    const result = await this.hoDogModel.findById(id).exec();
+    const result = await this.hoDogModel
+      .findById(id, null, { select: '-owner -createdAt -updatedAt' })
+      .exec();
     if (result === null) return false;
     else return result;
   }

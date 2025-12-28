@@ -52,7 +52,8 @@ export class CoffeeWithMilkService {
       {
         archived: false,
       },
-      { select: '-createdAt -updatedAt' },
+      null,
+      { select: '-owner -createdAt -updatedAt' },
     );
     return {
       status: 'success',
@@ -63,7 +64,9 @@ export class CoffeeWithMilkService {
   }
 
   async getCoffeeWithMilkById(id: string) {
-    const result = await this.coffeeWithMilkModel.findById(id).exec();
+    const result = await this.coffeeWithMilkModel
+      .findById(id, null, { select: '-owner -createdAt -updatedAt' })
+      .exec();
     if (result === null) return false;
     else return result;
   }

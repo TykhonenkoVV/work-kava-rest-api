@@ -56,7 +56,6 @@ export class DessertsController {
   @UsePipes(new ValidationPipe())
   getDessertById(@Param('id') id: string) {
     const isValidId = mongoose.Types.ObjectId.isValid(id);
-    console.log('GET IsValidId', isValidId);
     if (!isValidId) throw new HttpException('Invalid id.', 404);
     return this.dessertsServices.getDessertById(id);
   }

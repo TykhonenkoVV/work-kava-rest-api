@@ -29,9 +29,13 @@ export class CartsService {
   }
 
   async getCurrentCartByOwner(id: string) {
-    const currentCart = await this.cartModel.find({ owner: id }, null, {
-      select: '-owner -createdAt -updatedAt',
-    });
+    const currentCart = await this.cartModel.find(
+      { owner: id, archived: false },
+      null,
+      {
+        select: '-owner -createdAt -updatedAt',
+      },
+    );
     return {
       status: 'success',
       code: 200,
@@ -41,7 +45,9 @@ export class CartsService {
   }
 
   async getProductById(id: string) {
-    const result = await this.cartModel.findById(id).exec();
+    const result = await this.cartModel
+      .findById(id, { archived: false })
+      .exec();
     if (result === null) return false;
     else return result;
   }
@@ -60,10 +66,22 @@ export class CartsService {
       .exec();
 
     return {
-      status: 'create',
+      status: 'update',
       code: 201,
       message: 'Product updated successfully',
       updated: updatedProduct,
+    };
+  }
+
+  async deleteProductInCart(id: string) {
+    const isFinded = await this.getProductById(id);
+    if (!isFinded) throw new HttpException('Product not found.', 404);
+    const deletedCart = await this.cartModel.findByIdAndDelete(id);
+    return {
+      status: 'deleted',
+      code: 201,
+      message: 'Product deleted successfully',
+      deleted: deletedCart,
     };
   }
 }

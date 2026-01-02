@@ -1,6 +1,6 @@
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class UpdateLocaledRollDto {
+export class UpdateLocaledCafeDto {
   @IsOptional()
   @IsString()
   title?: string;
@@ -8,12 +8,4 @@ export class UpdateLocaledRollDto {
   @IsOptional()
   @IsNumber()
   standart?: number;
-
-  @IsOptional()
-  @IsNumber()
-  xl?: number;
-
-  @IsOptional()
-  @IsString()
-  ingredients?: string;
 }

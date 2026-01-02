@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsNotEmpty,
@@ -6,10 +7,9 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { Type } from 'class-transformer';
-import { CreateLocaledCafeDto } from 'src/common/dtos/create-located-cafe.dto';
+import { CreateLocaledRoom } from './create-located-room.dto';
 
-export class CreateDessertDto {
+export class CreateRoomDto {
   @IsNotEmpty()
   @IsNumber()
   index: number;
@@ -20,22 +20,18 @@ export class CreateDessertDto {
 
   @IsNotEmpty()
   @ValidateNested()
-  @Type(() => CreateLocaledCafeDto)
-  en: CreateLocaledCafeDto;
+  @Type(() => CreateLocaledRoom)
+  en: CreateLocaledRoom;
 
   @IsNotEmpty()
   @ValidateNested()
-  @Type(() => CreateLocaledCafeDto)
-  de: CreateLocaledCafeDto;
+  @Type(() => CreateLocaledRoom)
+  de: CreateLocaledRoom;
 
   @IsNotEmpty()
   @ValidateNested()
-  @Type(() => CreateLocaledCafeDto)
-  ua: CreateLocaledCafeDto;
-
-  @IsNotEmpty()
-  @IsNumber()
-  weight: number;
+  @Type(() => CreateLocaledRoom)
+  ua: CreateLocaledRoom;
 
   @IsOptional()
   @IsString()

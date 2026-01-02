@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
+import { LocatedFastfood } from 'src/common/schemas/located-fastfood.schema';
 import { User } from 'src/users/schemas/users/User.schema';
 
 @Schema({ versionKey: false, timestamps: true })
@@ -10,14 +11,14 @@ export class Roll {
   @Prop({ required: true })
   archived: boolean;
 
-  @Prop({ type: mongoose.Schema.Types.Mixed })
-  en: { title: string; standart: number; xl: number; ingredients: string };
+  @Prop({ _id: false, type: LocatedFastfood })
+  en: LocatedFastfood;
 
-  @Prop({ type: mongoose.Schema.Types.Mixed })
-  de: { title: string; standart: number; xl: number; ingredients: string };
+  @Prop({ _id: false, type: LocatedFastfood })
+  de: LocatedFastfood;
 
-  @Prop({ type: mongoose.Schema.Types.Mixed })
-  ua: { title: string; standart: number; xl: number; ingredients: string };
+  @Prop({ _id: false, type: LocatedFastfood })
+  ua: LocatedFastfood;
 
   @Prop()
   imgURL: string;

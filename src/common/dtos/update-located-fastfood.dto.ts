@@ -1,6 +1,6 @@
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class UpdateLocaledCoffeeWithMilkDto {
+export class UpdateLocaledFastfoodDto {
   @IsOptional()
   @IsString()
   title?: string;
@@ -8,4 +8,12 @@ export class UpdateLocaledCoffeeWithMilkDto {
   @IsOptional()
   @IsNumber()
   standart?: number;
+
+  @IsOptional()
+  @IsNumber()
+  xl?: number;
+
+  @IsOptional()
+  @IsString()
+  ingredients?: string;
 }

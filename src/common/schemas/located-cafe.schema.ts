@@ -1,15 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({ versionKey: false, timestamps: false })
-export class Enum {
+export class LocatedCafe {
   @Prop({ required: true })
-  en: number;
+  title: string;
 
   @Prop({ required: true })
-  de: number;
-
-  @Prop({ required: true })
-  ua: number;
+  standart: number;
 }
 
-export const EnumSchema = SchemaFactory.createForClass(Enum);
+export const LocatedCafeSchema = SchemaFactory.createForClass(LocatedCafe);

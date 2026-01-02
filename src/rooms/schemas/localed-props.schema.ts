@@ -1,0 +1,15 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+
+@Schema({ versionKey: false, timestamps: true })
+export class LocaledProps {
+  @Prop({ required: true })
+  title: string;
+
+  @Prop({ required: true })
+  price: number;
+
+  @Prop({ required: true })
+  caption: string;
+}
+
+export const LocaledPropsSchema = SchemaFactory.createForClass(LocaledProps);

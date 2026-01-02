@@ -5,8 +5,8 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { UpdateLocaledDessertDto } from './update-localed-dessert.dto';
 import { Type } from 'class-transformer';
+import { UpdateLocaledCafeDto } from 'src/common/dtos/update-located-cafe.dto';
 
 export class UpdateDessertDto {
   @IsOptional()
@@ -19,18 +19,18 @@ export class UpdateDessertDto {
 
   @IsOptional()
   @ValidateNested()
-  @Type(() => UpdateLocaledDessertDto)
-  en?: UpdateLocaledDessertDto;
+  @Type(() => UpdateLocaledCafeDto)
+  en?: UpdateLocaledCafeDto;
 
   @IsOptional()
   @ValidateNested()
-  @Type(() => UpdateLocaledDessertDto)
-  de?: UpdateLocaledDessertDto;
+  @Type(() => UpdateLocaledCafeDto)
+  de?: UpdateLocaledCafeDto;
 
   @IsOptional()
   @ValidateNested()
-  @Type(() => UpdateLocaledDessertDto)
-  ua?: UpdateLocaledDessertDto;
+  @Type(() => UpdateLocaledCafeDto)
+  ua?: UpdateLocaledCafeDto;
 
   @IsOptional()
   @IsNumber()

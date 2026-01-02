@@ -6,8 +6,8 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { CreateLocaledHotDogDto } from './create-located-hot-dog.dto';
 import { Type } from 'class-transformer';
+import { CreateLocaledFastfoodDto } from 'src/common/dtos/create-located-fastfood.dto';
 
 export class CreateHotDogDto {
   @IsNotEmpty()
@@ -20,18 +20,18 @@ export class CreateHotDogDto {
 
   @IsNotEmpty()
   @ValidateNested()
-  @Type(() => CreateLocaledHotDogDto)
-  en: CreateLocaledHotDogDto;
+  @Type(() => CreateLocaledFastfoodDto)
+  en: CreateLocaledFastfoodDto;
 
   @IsNotEmpty()
   @ValidateNested()
-  @Type(() => CreateLocaledHotDogDto)
-  de: CreateLocaledHotDogDto;
+  @Type(() => CreateLocaledFastfoodDto)
+  de: CreateLocaledFastfoodDto;
 
   @IsNotEmpty()
   @ValidateNested()
-  @Type(() => CreateLocaledHotDogDto)
-  ua: CreateLocaledHotDogDto;
+  @Type(() => CreateLocaledFastfoodDto)
+  ua: CreateLocaledFastfoodDto;
 
   @IsOptional()
   @IsString()

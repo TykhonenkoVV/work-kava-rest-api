@@ -6,8 +6,8 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { CreateLocaledRoll } from './create-located-roll.dto';
 import { Type } from 'class-transformer';
+import { CreateLocaledFastfoodDto } from 'src/common/dtos/create-located-fastfood.dto';
 
 export class CreateRollDto {
   @IsNotEmpty()
@@ -20,18 +20,18 @@ export class CreateRollDto {
 
   @IsNotEmpty()
   @ValidateNested()
-  @Type(() => CreateLocaledRoll)
-  en: CreateLocaledRoll;
+  @Type(() => CreateLocaledFastfoodDto)
+  en: CreateLocaledFastfoodDto;
 
   @IsNotEmpty()
   @ValidateNested()
-  @Type(() => CreateLocaledRoll)
-  de: CreateLocaledRoll;
+  @Type(() => CreateLocaledFastfoodDto)
+  de: CreateLocaledFastfoodDto;
 
   @IsNotEmpty()
   @ValidateNested()
-  @Type(() => CreateLocaledRoll)
-  ua: CreateLocaledRoll;
+  @Type(() => CreateLocaledFastfoodDto)
+  ua: CreateLocaledFastfoodDto;
 
   @IsOptional()
   @IsString()

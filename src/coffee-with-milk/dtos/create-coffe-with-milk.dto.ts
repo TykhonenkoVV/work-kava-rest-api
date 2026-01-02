@@ -7,7 +7,7 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { CreateLocaledCoffeeWithMilkDto } from './create-localed-coffee-with-milk.dto';
+import { CreateLocaledCafeDto } from 'src/common/dtos/create-located-cafe.dto';
 
 export class CreateCoffeeWithMilkDto {
   @IsNotEmpty()
@@ -20,18 +20,18 @@ export class CreateCoffeeWithMilkDto {
 
   @IsNotEmpty()
   @ValidateNested()
-  @Type(() => CreateLocaledCoffeeWithMilkDto)
-  en: CreateLocaledCoffeeWithMilkDto;
+  @Type(() => CreateLocaledCafeDto)
+  en: CreateLocaledCafeDto;
 
   @IsNotEmpty()
   @ValidateNested()
-  @Type(() => CreateLocaledCoffeeWithMilkDto)
-  de: CreateLocaledCoffeeWithMilkDto;
+  @Type(() => CreateLocaledCafeDto)
+  de: CreateLocaledCafeDto;
 
   @IsNotEmpty()
   @ValidateNested()
-  @Type(() => CreateLocaledCoffeeWithMilkDto)
-  ua: CreateLocaledCoffeeWithMilkDto;
+  @Type(() => CreateLocaledCafeDto)
+  ua: CreateLocaledCafeDto;
 
   @IsNotEmpty()
   @IsNumber()

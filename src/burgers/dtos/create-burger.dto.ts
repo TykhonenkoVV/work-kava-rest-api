@@ -7,7 +7,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { CreateLocaledBurgerDto } from './create-located-burger.dto';
+import { CreateLocaledFastfoodDto } from 'src/common/dtos/create-located-fastfood.dto';
 
 export class CreateBurgerDto {
   @IsNotEmpty()
@@ -20,18 +20,18 @@ export class CreateBurgerDto {
 
   @IsNotEmpty()
   @ValidateNested()
-  @Type(() => CreateLocaledBurgerDto)
-  en: CreateLocaledBurgerDto;
+  @Type(() => CreateLocaledFastfoodDto)
+  en: CreateLocaledFastfoodDto;
 
   @IsNotEmpty()
   @ValidateNested()
-  @Type(() => CreateLocaledBurgerDto)
-  de: CreateLocaledBurgerDto;
+  @Type(() => CreateLocaledFastfoodDto)
+  de: CreateLocaledFastfoodDto;
 
   @IsNotEmpty()
   @ValidateNested()
-  @Type(() => CreateLocaledBurgerDto)
-  ua: CreateLocaledBurgerDto;
+  @Type(() => CreateLocaledFastfoodDto)
+  ua: CreateLocaledFastfoodDto;
 
   @IsOptional()
   @IsString()

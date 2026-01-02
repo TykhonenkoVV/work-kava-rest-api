@@ -5,8 +5,8 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { UpdateLocaledHotDogDto } from './update-located-hot-dog.dto';
 import { Type } from 'class-transformer';
+import { UpdateLocaledFastfoodDto } from 'src/common/dtos/update-located-fastfood.dto';
 
 export class UpdateHotDogDto {
   @IsOptional()
@@ -19,18 +19,18 @@ export class UpdateHotDogDto {
 
   @IsOptional()
   @ValidateNested()
-  @Type(() => UpdateLocaledHotDogDto)
-  en?: UpdateLocaledHotDogDto;
+  @Type(() => UpdateLocaledFastfoodDto)
+  en?: UpdateLocaledFastfoodDto;
 
   @IsOptional()
   @ValidateNested()
-  @Type(() => UpdateLocaledHotDogDto)
-  de?: UpdateLocaledHotDogDto;
+  @Type(() => UpdateLocaledFastfoodDto)
+  de?: UpdateLocaledFastfoodDto;
 
   @IsOptional()
   @ValidateNested()
-  @Type(() => UpdateLocaledHotDogDto)
-  ua?: UpdateLocaledHotDogDto;
+  @Type(() => UpdateLocaledFastfoodDto)
+  ua?: UpdateLocaledFastfoodDto;
 
   @IsOptional()
   @IsString()

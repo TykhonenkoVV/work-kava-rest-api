@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
+import { LocatedCafe } from 'src/common/schemas/located-cafe.schema';
 import { User } from 'src/users/schemas/users/User.schema';
 
 @Schema({ versionKey: false, timestamps: true })
@@ -10,14 +11,14 @@ export class Dessert {
   @Prop({ required: true })
   archived: boolean;
 
-  @Prop({ type: mongoose.Schema.Types.Mixed })
-  en: { title: string; standart: number };
+  @Prop({ _id: false, type: LocatedCafe })
+  en: LocatedCafe;
 
-  @Prop({ type: mongoose.Schema.Types.Mixed })
-  de: { title: string; standart: number };
+  @Prop({ _id: false, type: LocatedCafe })
+  de: LocatedCafe;
 
-  @Prop({ type: mongoose.Schema.Types.Mixed })
-  ua: { title: string; standart: number };
+  @Prop({ _id: false, type: LocatedCafe })
+  ua: LocatedCafe;
 
   @Prop({ required: true })
   weight: number;

@@ -13,6 +13,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { HelpModule } from './help/help.module';
 import { CartsModule } from './carts/carts.module';
+import { RoomsModule } from './rooms/rooms.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { CartsModule } from './carts/carts.module';
     DessertsModule,
     HotDogsModule,
     CartsModule,
+    RoomsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

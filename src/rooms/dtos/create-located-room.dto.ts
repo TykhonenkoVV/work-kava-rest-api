@@ -1,11 +1,15 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class CreateLocaledCoffeeWithMilkDto {
+export class CreateLocaledRoom {
   @IsNotEmpty()
   @IsString()
   title: string;
 
   @IsNotEmpty()
   @IsNumber()
-  standart: number;
+  price: number;
+
+  @IsNotEmpty()
+  @IsString()
+  caption: number;
 }

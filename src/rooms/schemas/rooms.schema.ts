@@ -9,9 +9,12 @@ export class Room {
   index: number;
 
   @Prop({ required: true })
+  archived: boolean;
+
+  @Prop()
   imgURL: string;
 
-  @Prop({ required: true })
+  @Prop()
   webpImgURL: string;
 
   @Prop({ _id: false, type: LocaledProps })

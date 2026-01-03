@@ -97,7 +97,7 @@ export class RollsService {
       .exec();
 
     return {
-      status: 'create',
+      status: 'update',
       code: 201,
       message: 'Product updated successfully',
       updated: updatedRoll,

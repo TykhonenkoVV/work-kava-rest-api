@@ -20,6 +20,38 @@ import { CreateUserDto } from 'src/users/dtos/CreateUser.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  //Admin
+  @Public()
+  @Post('signin-admin')
+  signInAdmin(@Body() authDto: AuthDto) {
+    return this.authService.signInAdmin(authDto);
+  }
+
+  @Public()
+  @UseGuards(RefreshTokenGuard)
+  @Post('refresh-admin')
+  refreshAdminTokens(@Req() req: Request) {
+    const userId = req.user['sub'];
+    const refreshToken = req.user['refreshToken'];
+    return this.authService.refreshAdminTokens(userId, refreshToken);
+  }
+
+  @Public()
+  @UseGuards(AccessTokenGuard)
+  @Get('current-admin')
+  getCurrentAdmin(@Req() req: Request) {
+    return this.authService.getCurrentAdmin(req.user['email']);
+  }
+
+  @Public()
+  @UseGuards(AccessTokenGuard)
+  @Get('admin-logout')
+  adminLogout(@Req() req: Request, @Res() res: Response) {
+    res.status(204).json({ message: 'Logout' });
+    return this.authService.adminLogout(req.user['sub']);
+  }
+
+  //User
   @Public()
   @Post('signup')
   signup(@Body() createUserDto: CreateUserDto) {
@@ -30,12 +62,6 @@ export class AuthController {
   @Post('signin')
   signIn(@Body() authDto: AuthDto) {
     return this.authService.signIn(authDto);
-  }
-
-  @Public()
-  @Post('signinadmin')
-  signInAdmin(@Body() authDto: AuthDto) {
-    return this.authService.signInAdmin(authDto);
   }
 
   @Public()

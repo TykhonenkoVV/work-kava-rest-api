@@ -10,21 +10,21 @@ export class CartsService {
   constructor(@InjectModel(Cart.name) private cartModel: Model<Cart>) {}
 
   async addProductToCart(owner: string, addProductDto: AddProductToCartDto) {
-    const newCart = await new this.cartModel({
-      owner,
-      ...addProductDto,
-    }).save();
+    const newCart = await new this.cartModel(
+      {
+        owner,
+        ...addProductDto,
+      },
+      null,
+      {
+        select: '-owner -createdAt -updatedAt',
+      },
+    ).save();
     return {
       status: 'created',
       code: 201,
       message: 'Product created successfully',
-      product: {
-        _id: newCart._id,
-        productId: newCart.productId,
-        standart: newCart.standart,
-        xl: newCart.xl,
-        category: newCart.category,
-      },
+      product: newCart,
     };
   }
 
@@ -44,6 +44,22 @@ export class CartsService {
     };
   }
 
+  async getHistoryByOwner(id: string) {
+    const history = await this.cartModel.find(
+      { owner: id, archived: true },
+      null,
+      {
+        select: '-owner -createdAt -updatedAt',
+      },
+    );
+    return {
+      status: 'success',
+      code: 200,
+      message: 'History successfully received',
+      history: history,
+    };
+  }
+
   async getProductById(id: string) {
     const result = await this.cartModel
       .findById(id, { archived: false })
@@ -59,10 +75,27 @@ export class CartsService {
     const isFinded = await this.getProductById(id);
     if (!isFinded) throw new HttpException('Product not found.', 404);
     const updatedProduct = await this.cartModel
-      .findByIdAndUpdate(id, updateProductInCartDto, {
-        new: true,
-        select: '-owner -createdAt -updatedAt',
-      })
+      .findByIdAndUpdate(
+        id,
+        {
+          archived: updateProductInCartDto?.archived,
+          receipt: updateProductInCartDto?.receipt,
+          standart: updateProductInCartDto?.standart,
+          xl: updateProductInCartDto?.xl,
+          $set: {
+            'en.standart': updateProductInCartDto?.en?.standart,
+            'en.xl': updateProductInCartDto?.en?.xl,
+            'de.standart': updateProductInCartDto?.de?.standart,
+            'de.xl': updateProductInCartDto?.de?.xl,
+            'ua.standart': updateProductInCartDto?.ua?.standart,
+            'ua.xl': updateProductInCartDto?.ua?.xl,
+          },
+        },
+        {
+          new: true,
+          select: '-owner -createdAt -updatedAt',
+        },
+      )
       .exec();
 
     return {

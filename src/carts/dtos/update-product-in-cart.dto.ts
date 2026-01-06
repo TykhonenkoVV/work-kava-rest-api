@@ -3,9 +3,10 @@ import {
   IsBoolean,
   IsNumber,
   IsOptional,
+  IsString,
   ValidateNested,
 } from 'class-validator';
-import { PriceDto } from './price.dto';
+import { UpdateLocaledCartDto } from './update-located-cart.dto';
 
 export class UpdateProductInCartDto {
   @IsOptional()
@@ -21,7 +22,21 @@ export class UpdateProductInCartDto {
   xl?: number;
 
   @IsOptional()
+  @IsString()
+  receipt?: string;
+
+  @IsOptional()
   @ValidateNested()
-  @Type(() => PriceDto)
-  price?: PriceDto;
+  @Type(() => UpdateLocaledCartDto)
+  en?: UpdateLocaledCartDto;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => UpdateLocaledCartDto)
+  de?: UpdateLocaledCartDto;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => UpdateLocaledCartDto)
+  ua?: UpdateLocaledCartDto;
 }

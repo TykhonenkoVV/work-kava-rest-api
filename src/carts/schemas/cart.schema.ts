@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { User } from 'src/users/schemas/users/User.schema';
-import { Price } from './price.schema';
+import { LocatedCart } from './located-cart.schema';
 
 @Schema({ versionKey: false, timestamps: true })
 export class Cart {
@@ -17,11 +17,26 @@ export class Cart {
   @Prop({ required: false })
   xl?: number;
 
-  @Prop({ _id: false, type: Price })
-  price: Price;
+  @Prop({ required: false })
+  receipt?: string;
+
+  @Prop({ _id: false, required: true, type: LocatedCart })
+  en: LocatedCart;
+
+  @Prop({ _id: false, required: true, type: LocatedCart })
+  de: LocatedCart;
+
+  @Prop({ _id: false, required: true, type: LocatedCart })
+  ua: LocatedCart;
 
   @Prop({ required: true })
   category: string;
+
+  @Prop()
+  imgURL: string;
+
+  @Prop()
+  webpImgURL: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Owner', index: false })
   owner: User;

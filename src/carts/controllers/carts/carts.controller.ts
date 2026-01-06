@@ -19,7 +19,7 @@ import { UpdateProductInCartDto } from 'src/carts/dtos/update-product-in-cart.dt
 import { CartsService } from 'src/carts/services/carts/carts.service';
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 
-@Controller('api/carts')
+@Controller('api/cart')
 export class CartsController {
   constructor(private cartServices: CartsService) {}
 
@@ -36,10 +36,16 @@ export class CartsController {
 
   @UseGuards(AccessTokenGuard)
   @Get()
-  @UsePipes(new ValidationPipe())
-  getCurrentCart(@Req() req: Request) {
+  getCurrentCartByOwner(@Req() req: Request) {
     const owner = req.user['sub'];
     return this.cartServices.getCurrentCartByOwner(owner);
+  }
+
+  @UseGuards(AccessTokenGuard)
+  @Get('history')
+  getHistoryByOwner(@Req() req: Request) {
+    const owner = req.user['sub'];
+    return this.cartServices.getHistoryByOwner(owner);
   }
 
   @UseGuards(AccessTokenGuard)
@@ -56,7 +62,6 @@ export class CartsController {
 
   @UseGuards(AccessTokenGuard)
   @Delete(':id')
-  @UsePipes(new ValidationPipe())
   deleteProductInCart(@Param('id') id: string) {
     const isValidId = mongoose.Types.ObjectId.isValid(id);
     if (!isValidId) throw new HttpException('Invalid id.', 404);

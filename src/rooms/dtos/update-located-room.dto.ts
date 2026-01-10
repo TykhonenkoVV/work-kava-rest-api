@@ -11,5 +11,5 @@ export class UpdateLocaledRoom {
 
   @IsOptional()
   @IsString()
-  caption?: number;
+  description?: number;
 }

@@ -12,6 +12,9 @@ export class Room {
   archived: boolean;
 
   @Prop()
+  date: string;
+
+  @Prop()
   imgURL: string;
 
   @Prop()

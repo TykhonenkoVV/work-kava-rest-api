@@ -30,6 +30,10 @@ export class AddProductToCartDto {
   @IsString()
   category: string;
 
+  @IsOptional()
+  @IsString()
+  date?: string;
+
   @IsNotEmpty()
   @IsString()
   imgURL: string;

@@ -18,6 +18,10 @@ export class UpdateRoomDto {
   archived?: boolean;
 
   @IsOptional()
+  @IsString()
+  date?: string;
+
+  @IsOptional()
   @ValidateNested()
   @Type(() => UpdateLocaledRoom)
   en?: UpdateLocaledRoom;

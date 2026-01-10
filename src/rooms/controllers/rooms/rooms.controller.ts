@@ -24,6 +24,9 @@ import { CreateRoomDto } from 'src/rooms/dtos/create-room.dto';
 import { UpdateRoomDto } from 'src/rooms/dtos/update-room.dto';
 import { RoomsService } from 'src/rooms/services/rooms/rooms.service';
 import * as fs from 'fs';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { Role } from 'src/common/enums/role.enum';
+import { RolesGuard } from 'src/common/guards/roles.guard';
 
 @Controller('api/rooms')
 export class RoomsController {
@@ -32,7 +35,8 @@ export class RoomsController {
     private cloudinaryServices: CloudinaryService,
   ) {}
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator)
   @Post()
   @UsePipes(new ValidationPipe())
   createRoom(@Body() createRoomDto: CreateRoomDto, @Req() req: Request) {
@@ -40,6 +44,8 @@ export class RoomsController {
     return this.roomsServices.createRoom(owner, createRoomDto);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator, Role.employer)
   @Get('all')
   getAllRooms() {
     return this.roomsServices.getAllRooms();
@@ -55,7 +61,8 @@ export class RoomsController {
     return this.roomsServices.getRoomById(id);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator)
   @Patch(':id')
   @UsePipes(new ValidationPipe())
   updateRolls(@Param('id') id: string, @Body() updateRoomDto: UpdateRoomDto) {
@@ -64,7 +71,8 @@ export class RoomsController {
     return this.roomsServices.updateRoom(id, updateRoomDto);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator)
   @Delete(':id')
   deleteRoom(@Param('id') id: string) {
     const isValidId = mongoose.Types.ObjectId.isValid(id);
@@ -72,7 +80,8 @@ export class RoomsController {
     return this.roomsServices.deleteRoom(id);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator)
   @Post('images')
   @UseInterceptors(
     FileFieldsInterceptor([

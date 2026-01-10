@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { Role } from 'src/common/enums/role.enum';
 
 export type AdminDocument = Admin & Document;
 
@@ -29,8 +30,11 @@ export class Admin {
   @Prop()
   refreshToken: string;
 
-  @Prop({ enum: ['ADMIN', 'EMPLOYEE', 'USER'] })
-  role: string;
+  @Prop({
+    type: [{ type: String, enum: Role }],
+    default: [Role.employee],
+  })
+  role: Role[];
 }
 
 export const AdminSchema = SchemaFactory.createForClass(Admin);

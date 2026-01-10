@@ -11,5 +11,5 @@ export class CreateLocaledRoom {
 
   @IsNotEmpty()
   @IsString()
-  caption: number;
+  description: number;
 }

@@ -24,6 +24,9 @@ import { CloudinaryService } from 'src/cloudinary/services/cloudinary/cloudinary
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 import * as fs from 'fs';
 import { ImagesUrl } from 'src/common/helpers/interfaces';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { Role } from 'src/common/enums/role.enum';
+import { RolesGuard } from 'src/common/guards/roles.guard';
 
 @Controller('api/burgers')
 export class BurgersController {
@@ -32,7 +35,8 @@ export class BurgersController {
     private cloudinaryServices: CloudinaryService,
   ) {}
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee)
   @Post()
   @UsePipes(new ValidationPipe())
   createBurger(@Body() createBurgerDto: CreateBurgerDto, @Req() req: Request) {
@@ -40,6 +44,8 @@ export class BurgersController {
     return this.burgersServices.createBurger(owner, createBurgerDto);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator, Role.employer)
   @Get('all')
   getAllBurgers() {
     return this.burgersServices.getAllBurgers();
@@ -55,7 +61,8 @@ export class BurgersController {
     return this.burgersServices.getBurgerById(id);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator)
   @Patch(':id')
   @UsePipes(new ValidationPipe())
   updateBurger(
@@ -67,7 +74,8 @@ export class BurgersController {
     return this.burgersServices.updateBurgers(id, updateBurgerDto);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator)
   @Delete(':id')
   @UsePipes(new ValidationPipe())
   deleteBurgers(@Param('id') id: string) {
@@ -76,7 +84,8 @@ export class BurgersController {
     return this.burgersServices.deleteBurger(id);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator)
   @Post('images')
   @UseInterceptors(
     FileFieldsInterceptor([

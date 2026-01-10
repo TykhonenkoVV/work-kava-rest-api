@@ -24,6 +24,9 @@ import * as fs from 'fs';
 import { CloudinaryService } from 'src/cloudinary/services/cloudinary/cloudinary.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ImagesUrl } from 'src/common/helpers/interfaces';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { Role } from 'src/common/enums/role.enum';
 
 @Controller('api/hot-dogs')
 export class HotDogsController {
@@ -31,7 +34,9 @@ export class HotDogsController {
     private hotDogsServices: HotDogsService,
     private cloudinaryServices: CloudinaryService,
   ) {}
-  @UseGuards(AccessTokenGuard)
+
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator)
   @Post()
   @UsePipes(new ValidationPipe())
   createHotDog(@Body() createHotDogDto: CreateHotDogDto, @Req() req: Request) {
@@ -39,6 +44,8 @@ export class HotDogsController {
     return this.hotDogsServices.createHotDog(owner, createHotDogDto);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator, Role.employer)
   @Get('all')
   getAllHotDogs() {
     return this.hotDogsServices.getAllHotDogs();
@@ -54,7 +61,8 @@ export class HotDogsController {
     return this.hotDogsServices.getHotDogById(id);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator)
   @Patch(':id')
   @UsePipes(new ValidationPipe())
   updateHotDog(
@@ -66,7 +74,8 @@ export class HotDogsController {
     return this.hotDogsServices.updateHotDog(id, updateHotDogDto);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator)
   @Delete(':id')
   @UsePipes(new ValidationPipe())
   deleteHotDogs(@Param('id') id: string) {
@@ -75,7 +84,8 @@ export class HotDogsController {
     return this.hotDogsServices.deleteHotdog(id);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator)
   @Post('images')
   @UseInterceptors(
     FileFieldsInterceptor([

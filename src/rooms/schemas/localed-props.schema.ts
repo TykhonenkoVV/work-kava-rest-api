@@ -9,7 +9,7 @@ export class LocaledProps {
   price: number;
 
   @Prop({ required: true })
-  caption: string;
+  description: string;
 }
 
 export const LocaledPropsSchema = SchemaFactory.createForClass(LocaledProps);

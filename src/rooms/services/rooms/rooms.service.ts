@@ -1,16 +1,18 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { ForbiddenException, HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CloudinaryService } from 'src/cloudinary/services/cloudinary/cloudinary.service';
 import { CreateRoomDto } from 'src/rooms/dtos/create-room.dto';
 import { UpdateRoomDto } from 'src/rooms/dtos/update-room.dto';
 import { Room } from 'src/rooms/schemas/rooms.schema';
+import { UsersService } from 'src/users/srvices/users/users.service';
 
 @Injectable()
 export class RoomsService {
   constructor(
     @InjectModel(Room.name) private roomModel: Model<Room>,
     private cloudinaryServices: CloudinaryService,
+    private useryServices: UsersService,
   ) {}
 
   async createRoom(owner: string, createRoomDto: CreateRoomDto) {
@@ -72,18 +74,19 @@ export class RoomsService {
         {
           index: updateRoomDto.index,
           archived: updateRoomDto.archived,
+          date: updateRoomDto?.date,
           imgURL: updateRoomDto.imgURL,
           webpImgURL: updateRoomDto.webpImgURL,
           $set: {
             'en.title': updateRoomDto?.en?.title,
             'en.price': updateRoomDto?.en?.price,
-            'en.caption': updateRoomDto?.en?.caption,
+            'en.description': updateRoomDto?.en?.description,
             'de.title': updateRoomDto?.de?.title,
             'de.price': updateRoomDto?.de?.price,
-            'de.caption': updateRoomDto?.de?.caption,
+            'de.description': updateRoomDto?.de?.description,
             'ua.title': updateRoomDto?.ua?.title,
             'ua.price': updateRoomDto?.ua?.price,
-            'ua.caption': updateRoomDto?.ua?.caption,
+            'ua.description': updateRoomDto?.ua?.description,
           },
         },
         {

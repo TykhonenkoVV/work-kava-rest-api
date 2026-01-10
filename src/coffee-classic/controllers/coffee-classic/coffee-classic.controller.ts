@@ -24,6 +24,9 @@ import { CoffeeClassicService } from 'src/coffee-classic/services/coffee-classic
 import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
 import * as fs from 'fs';
 import { ImagesUrl } from 'src/common/helpers/interfaces';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { Role } from 'src/common/enums/role.enum';
+import { RolesGuard } from 'src/common/guards/roles.guard';
 
 @Controller('api/coffee-classic')
 export class CoffeeClassicController {
@@ -31,7 +34,9 @@ export class CoffeeClassicController {
     private caffeeClassicServices: CoffeeClassicService,
     private cloudinaryServices: CloudinaryService,
   ) {}
-  @UseGuards(AccessTokenGuard)
+
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator)
   @Post()
   @UsePipes(new ValidationPipe())
   createCoffeeClassic(
@@ -45,6 +50,8 @@ export class CoffeeClassicController {
     );
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator, Role.employer)
   @Get('all')
   getAllCoffeeClassic() {
     return this.caffeeClassicServices.getAllCoffeeClassic();
@@ -60,7 +67,8 @@ export class CoffeeClassicController {
     return this.caffeeClassicServices.getCoffeeClassicById(id);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator)
   @Patch(':id')
   @UsePipes(new ValidationPipe())
   updateCoffeeClassic(
@@ -75,7 +83,8 @@ export class CoffeeClassicController {
     );
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator)
   @Delete(':id')
   @UsePipes(new ValidationPipe())
   deleteCoffeeClassic(@Param('id') id: string) {
@@ -84,7 +93,8 @@ export class CoffeeClassicController {
     return this.caffeeClassicServices.deleteCoffeeClassic(id);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator)
   @Post('images')
   @UseInterceptors(
     FileFieldsInterceptor([

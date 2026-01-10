@@ -5,6 +5,8 @@ import { CloudinaryService } from 'src/cloudinary/services/cloudinary/cloudinary
 import { MongooseModule } from '@nestjs/mongoose';
 import { Room, RoomSchema } from './schemas/rooms.schema';
 import { MulterModule } from '@nestjs/platform-express';
+import { UsersService } from 'src/users/srvices/users/users.service';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [
@@ -17,6 +19,7 @@ import { MulterModule } from '@nestjs/platform-express';
     MulterModule.register({
       dest: './uploads',
     }),
+    UsersModule,
   ],
   controllers: [RoomsController],
   providers: [RoomsService, CloudinaryService],

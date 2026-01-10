@@ -24,6 +24,9 @@ import { UpdateDessertDto } from 'src/desserts/dtos/update-dessert.dto';
 import { DessertsService } from 'src/desserts/services/desserts/desserts.service';
 import * as fs from 'fs';
 import { ImagesUrl } from 'src/common/helpers/interfaces';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { Role } from 'src/common/enums/role.enum';
 
 @Controller('api/desserts')
 export class DessertsController {
@@ -31,7 +34,9 @@ export class DessertsController {
     private dessertsServices: DessertsService,
     private cloudinaryServices: CloudinaryService,
   ) {}
-  @UseGuards(AccessTokenGuard)
+
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator)
   @Post()
   @UsePipes(new ValidationPipe())
   createDessert(
@@ -42,6 +47,8 @@ export class DessertsController {
     return this.dessertsServices.createDessert(owner, createDessertDto);
   }
 
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator, Role.employer)
   @Get('all')
   getAllDesserts() {
     return this.dessertsServices.getAllDesserts();
@@ -60,7 +67,8 @@ export class DessertsController {
     return this.dessertsServices.getDessertById(id);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator)
   @Patch(':id')
   @UsePipes(new ValidationPipe())
   updateDessert(
@@ -72,7 +80,8 @@ export class DessertsController {
     return this.dessertsServices.updateDessert(id, updateDessertDto);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator)
   @Delete(':id')
   @UsePipes(new ValidationPipe())
   deleteDessert(@Param('id') id: string) {
@@ -81,7 +90,8 @@ export class DessertsController {
     return this.dessertsServices.deleteDessert(id);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles(Role.admin, Role.employee, Role.moderator)
   @Post('images')
   @UseInterceptors(
     FileFieldsInterceptor([

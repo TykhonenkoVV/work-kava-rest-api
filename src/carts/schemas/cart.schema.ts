@@ -20,6 +20,9 @@ export class Cart {
   @Prop({ required: false })
   receipt?: string;
 
+  @Prop({ required: false })
+  date?: string;
+
   @Prop({ _id: false, required: true, type: LocatedCart })
   en: LocatedCart;
 

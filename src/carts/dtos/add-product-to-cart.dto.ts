@@ -26,6 +26,10 @@ export class AddProductToCartDto {
   @IsNumber()
   xl?: number;
 
+  @IsOptional()
+  @IsNumber()
+  count?: number;
+
   @IsNotEmpty()
   @IsString()
   category: string;

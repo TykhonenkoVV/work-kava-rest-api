@@ -82,6 +82,7 @@ export class CartsService {
           receipt: updateProductInCartDto?.receipt,
           standart: updateProductInCartDto?.standart,
           xl: updateProductInCartDto?.xl,
+          count: updateProductInCartDto?.count,
           $set: {
             'en.standart': updateProductInCartDto?.en?.standart,
             'en.xl': updateProductInCartDto?.en?.xl,

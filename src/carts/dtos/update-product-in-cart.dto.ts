@@ -22,6 +22,10 @@ export class UpdateProductInCartDto {
   xl?: number;
 
   @IsOptional()
+  @IsNumber()
+  count?: number;
+
+  @IsOptional()
   @IsString()
   receipt?: string;
 

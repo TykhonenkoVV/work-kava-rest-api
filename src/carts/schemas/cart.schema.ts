@@ -18,6 +18,9 @@ export class Cart {
   xl?: number;
 
   @Prop({ required: false })
+  count?: number;
+
+  @Prop({ required: false })
   receipt?: string;
 
   @Prop({ required: false })
